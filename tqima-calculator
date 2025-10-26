@@ -1,0 +1,20 @@
+The value of this app this that it calculates the savings a GBS leader can make by using TQ IMA's Agentic Launchpad.
+It is a professional service the configures ServiceNow Now Assist Agentic Workflows.
+We essentially want:
+1. the user to input their function headcount
+2. us calculate how much we can save them with Agentic Launchpad
+3. Display the predicted savings over a year
+
+You're going to have to come up with some numbers for the calculation based on your best research into the topic.
+
+Lets keep this simple and easy to tweak in terms of adding new inputs, new or editing calculation elements.
+
+Maybe keep it all in a NextJS App if possible that I'll host on Vercel.
+
+Make it a super modern UI and smooth simple easy to use UX, with nice transitions. The primary color is a white background, raleway font, fontawesome for icons, a very dark blue color called void is the secondary color. The text on white is very dark grey. And its white on the Void blue.
+
+3rd color is a bright and muted orange I think its called phaser beam.
+
+I probably envision it like a centralised form. Mobile optimised. Include a back button going to tqima.com.
+
+Probably need a button to trigger an email to su
