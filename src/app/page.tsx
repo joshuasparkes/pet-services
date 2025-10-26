@@ -1,0 +1,927 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { auth } from '@/lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPaw,
+  faHeart,
+  faShieldAlt,
+  faClock,
+  faMapMarkerAlt,
+  faPhone,
+  faEnvelope,
+  faStar,
+  faCheckCircle,
+  faDog,
+  faHome,
+  faCamera,
+  faUsers,
+  faTimes,
+  faBars,
+} from "@fortawesome/free-solid-svg-icons";
+
+export default function Home() {
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleEmailContact = () => {
+    window.location.href =
+      "mailto:isabel.sparkes@hotmail.com?subject=Pet Services Inquiry";
+  };
+
+  const handlePhoneCall = () => {
+    window.location.href = "tel:07590566769";
+  };
+
+  const handleWhatsApp = () => {
+    window.open("https://wa.me/447590566769", "_blank");
+  };
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-100 z-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                <FontAwesomeIcon icon={faPaw} className="text-white text-sm" />
+              </div>
+              <span className="text-xl font-bold text-gray-900">
+                Bournville Pet Services
+              </span>
+            </div>
+            <div className="hidden md:flex space-x-8">
+              <button
+                onClick={() => scrollToSection("services")}
+                className="text-gray-600 hover:text-blue-600 transition-colors"
+              >
+                Services
+              </button>
+              <button
+                onClick={() => scrollToSection("pricing")}
+                className="text-gray-600 hover:text-blue-600 transition-colors"
+              >
+                Pricing
+              </button>
+              <button
+                onClick={() => scrollToSection("about")}
+                className="text-gray-600 hover:text-blue-600 transition-colors"
+              >
+                About
+              </button>
+              <button
+                onClick={() => scrollToSection("areas")}
+                className="text-gray-600 hover:text-blue-600 transition-colors"
+              >
+                Areas
+              </button>
+              <button
+                onClick={() => scrollToSection("testimonials")}
+                className="text-gray-600 hover:text-blue-600 transition-colors"
+              >
+                Reviews
+              </button>
+              {user ? (
+                <a
+                  href="/dashboard"
+                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                  My Dashboard
+                </a>
+              ) : null}
+              <button
+                onClick={() => setIsContactModalOpen(true)}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Contact
+              </button>
+            </div>
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="text-gray-600 hover:text-gray-900 p-2"
+              >
+                <FontAwesomeIcon
+                  icon={isMobileMenuOpen ? faTimes : faBars}
+                  className="text-xl"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden bg-white border-t border-gray-100">
+            <div className="px-4 py-2 space-y-1">
+              <button
+                onClick={() => scrollToSection("services")}
+                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+              >
+                Services
+              </button>
+              <button
+                onClick={() => scrollToSection("pricing")}
+                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+              >
+                Pricing
+              </button>
+              <button
+                onClick={() => scrollToSection("about")}
+                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+              >
+                About
+              </button>
+              <button
+                onClick={() => scrollToSection("areas")}
+                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+              >
+                Areas
+              </button>
+              <button
+                onClick={() => scrollToSection("testimonials")}
+                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+              >
+                Reviews
+              </button>
+              {user ? (
+                <a
+                  href="/dashboard"
+                  className="block w-full text-left px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+                >
+                  My Dashboard
+                </a>
+              ) : null}
+              <button
+                onClick={() => {
+                  setIsContactModalOpen(true);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="block w-full text-left px-3 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-md transition-colors"
+              >
+                Contact
+              </button>
+            </div>
+          </div>
+        )}
+      </nav>
+
+      {/* Hero Section */}
+      <section className="pt-16 pb-20 bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-20">
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+              Professional Pet Care in
+              <span className="text-blue-600"> Bournville</span>
+            </h1>
+            <h2 className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              Trusted, caring pet services for your beloved companions. Dog
+              walking, pet sitting, and home visits with the personal touch your
+              pets deserve.
+            </h2>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <a
+                href="/bookings"
+                className="bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg"
+              >
+                Book Pet Care Now
+              </a>
+              <button
+                onClick={() => setIsContactModalOpen(true)}
+                className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-600 hover:text-white transition-colors"
+              >
+                Ask a Question
+              </button>
+            </div>
+            <div className="mt-8 flex justify-center items-center space-x-6 text-sm text-gray-600">
+              <div className="flex items-center space-x-2">
+                <FontAwesomeIcon
+                  icon={faShieldAlt}
+                  className="text-green-600"
+                />
+                <span>Fully Insured</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <FontAwesomeIcon
+                  icon={faCheckCircle}
+                  className="text-green-600"
+                />
+                <span>DBS Checked</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <FontAwesomeIcon icon={faHeart} className="text-red-500" />
+                <span>Local & Trusted</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section id="services" className="py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Our Pet Care Services
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Comprehensive pet care services tailored to your pet&apos;s unique
+              needs and your busy lifestyle.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center p-8 rounded-2xl bg-blue-50 hover:bg-blue-100 transition-colors">
+              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <FontAwesomeIcon icon={faDog} className="text-white text-2xl" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Dog Walking
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Regular walks tailored to your dog&apos;s energy level and
+                needs. Individual or group walks available with real-time
+                updates and photos.
+              </p>
+              <ul className="text-left text-gray-600 space-y-2">
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600 text-sm"
+                  />
+                  <span>30-60 minute walks</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600 text-sm"
+                  />
+                  <span>Photo updates</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600 text-sm"
+                  />
+                  <span>Flexible scheduling</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="text-center p-8 rounded-2xl bg-green-50 hover:bg-green-100 transition-colors">
+              <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <FontAwesomeIcon
+                  icon={faHome}
+                  className="text-white text-2xl"
+                />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Pet Sitting
+              </h3>
+              <p className="text-gray-600 mb-6">
+                In-home pet care while you&apos;re away. Your pets stay
+                comfortable in their familiar environment with personalized
+                attention.
+              </p>
+              <ul className="text-left text-gray-600 space-y-2">
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600 text-sm"
+                  />
+                  <span>In-home care</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600 text-sm"
+                  />
+                  <span>Feeding & medication</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600 text-sm"
+                  />
+                  <span>Daily updates</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="text-center p-8 rounded-2xl bg-purple-50 hover:bg-purple-100 transition-colors">
+              <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <FontAwesomeIcon
+                  icon={faCamera}
+                  className="text-white text-2xl"
+                />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Home Visits
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Quick check-ins for feeding, medication, and companionship.
+                Perfect for pets who prefer to stay home.
+              </p>
+              <ul className="text-left text-gray-600 space-y-2">
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600 text-sm"
+                  />
+                  <span>30-minute visits</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600 text-sm"
+                  />
+                  <span>Feeding & water</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600 text-sm"
+                  />
+                  <span>Play & attention</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section id="pricing" className="py-20 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Transparent Pricing
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              No hidden fees, no surprises. Just honest pricing for quality pet care services in Bournville.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Dog Walking Pricing */}
+            <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FontAwesomeIcon icon={faDog} className="text-white text-2xl" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Dog Walking</h3>
+                <p className="text-gray-600">Professional walks tailored to your dog</p>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                  <span className="font-medium text-gray-900">30 Minutes</span>
+                  <span className="text-2xl font-bold text-blue-600">£15</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                  <span className="font-medium text-gray-900">1 Hour</span>
+                  <span className="text-2xl font-bold text-blue-600">£25</span>
+                </div>
+              </div>
+              
+              <ul className="mt-6 space-y-3 text-sm text-gray-600">
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <span>Individual or group walks</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <span>Photo updates during walk</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <span>Flexible scheduling</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <span>Exercise tailored to your dog</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Pet Sitting Pricing */}
+            <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100 relative">
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+                  Most Popular
+                </span>
+              </div>
+              
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FontAwesomeIcon icon={faHome} className="text-white text-2xl" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Pet Sitting</h3>
+                <p className="text-gray-600">In-home care while you're away</p>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                  <span className="font-medium text-gray-900">Half Day (4hrs)</span>
+                  <span className="text-2xl font-bold text-green-600">£40</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                  <span className="font-medium text-gray-900">Full Day (8hrs)</span>
+                  <span className="text-2xl font-bold text-green-600">£70</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                  <span className="font-medium text-gray-900">Overnight (12hrs)</span>
+                  <span className="text-2xl font-bold text-green-600">£90</span>
+                </div>
+              </div>
+              
+              <ul className="mt-6 space-y-3 text-sm text-gray-600">
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <span>Feeding & medication</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <span>Daily updates & photos</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <span>Playtime & companionship</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <span>Home security presence</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Home Visits Pricing */}
+            <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FontAwesomeIcon icon={faCamera} className="text-white text-2xl" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Home Visits</h3>
+                <p className="text-gray-600">Quick check-ins and care</p>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                  <span className="font-medium text-gray-900">30 Minutes</span>
+                  <span className="text-2xl font-bold text-purple-600">£20</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                  <span className="font-medium text-gray-900">1 Hour</span>
+                  <span className="text-2xl font-bold text-purple-600">£35</span>
+                </div>
+              </div>
+              
+              <ul className="mt-6 space-y-3 text-sm text-gray-600">
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <span>Feeding & fresh water</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <span>Medication administration</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <span>Play & attention</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <span>Litter tray cleaning</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-12 text-center">
+            <div className="bg-blue-50 rounded-2xl p-8 max-w-4xl mx-auto">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Payment Information</h3>
+              <div className="grid md:grid-cols-2 gap-8 text-left">
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-3">💳 Payment Methods</h4>
+                  <ul className="space-y-2 text-gray-600">
+                    <li>• Cash on completion</li>
+                    <li>• Bank transfer available</li>
+                    <li>• Payment due after service</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-3">📋 What's Included</h4>
+                  <ul className="space-y-2 text-gray-600">
+                    <li>• Fully insured service</li>
+                    <li>• DBS checked carer</li>
+                    <li>• Photo/video updates</li>
+                    <li>• Emergency contact available</li>
+                  </ul>
+                </div>
+              </div>
+              <div className="mt-8">
+                <a 
+                  href="/bookings"
+                  className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors"
+                >
+                  Book Your Service Today
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                Meet Isabel - Your Local Pet Care Expert
+              </h2>
+              <p className="text-lg text-gray-600 mb-6">
+                Hi! I&apos;m Isabel Sparkes, a passionate animal lover providing
+                personalized pet care services in Bournville and surrounding
+                areas. With years of experience caring for pets of all sizes and
+                temperaments, I understand that every pet is unique and deserves
+                individual attention.
+              </p>
+              <p className="text-lg text-gray-600 mb-8">
+                I believe in building trust with both pets and their owners
+                through reliable, caring service. Your pet&apos;s happiness and
+                wellbeing are my top priorities, and I treat every pet as if
+                they were my own.
+              </p>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                  <div className="text-2xl font-bold text-blue-600 mb-2">
+                    5+
+                  </div>
+                  <div className="text-gray-600">Years Experience</div>
+                </div>
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                  <div className="text-2xl font-bold text-blue-600 mb-2">
+                    100+
+                  </div>
+                  <div className="text-gray-600">Happy Pets</div>
+                </div>
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="w-64 h-64 rounded-full mx-auto mb-6 overflow-hidden shadow-lg">
+                <Image
+                  src="https://images.pexels.com/photos/7288/animal-dog-pet-park.jpg"
+                  alt="Isabel with a dog in the park - Professional pet care services"
+                  width={256}
+                  height={256}
+                  className="w-full h-full object-cover"
+                  priority
+                />
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center justify-center space-x-2 text-gray-600">
+                  <FontAwesomeIcon
+                    icon={faShieldAlt}
+                    className="text-green-600"
+                  />
+                  <span>Fully Insured & DBS Checked</span>
+                </div>
+                <div className="flex items-center justify-center space-x-2 text-gray-600">
+                  <FontAwesomeIcon
+                    icon={faMapMarkerAlt}
+                    className="text-blue-600"
+                  />
+                  <span>Local to Bournville</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Service Areas */}
+      <section id="areas" className="py-20 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Service Areas
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              We provide pet care services throughout Bournville and the
+              surrounding Birmingham areas.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center p-6 rounded-lg bg-blue-50">
+              <FontAwesomeIcon
+                icon={faMapMarkerAlt}
+                className="text-blue-600 text-3xl mb-4"
+              />
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Primary Areas
+              </h3>
+              <ul className="text-gray-600 space-y-1">
+                <li>Bournville</li>
+                <li>Selly Oak</li>
+                <li>Kings Norton</li>
+                <li>Cotteridge</li>
+              </ul>
+            </div>
+            <div className="text-center p-6 rounded-lg bg-green-50">
+              <FontAwesomeIcon
+                icon={faMapMarkerAlt}
+                className="text-green-600 text-3xl mb-4"
+              />
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Extended Areas
+              </h3>
+              <ul className="text-gray-600 space-y-1">
+                <li>Kings Heath</li>
+                <li>Moseley</li>
+                <li>Stirchley</li>
+                <li>Selly Park</li>
+              </ul>
+            </div>
+            <div className="text-center p-6 rounded-lg bg-purple-50">
+              <FontAwesomeIcon
+                icon={faClock}
+                className="text-purple-600 text-3xl mb-4"
+              />
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Service Hours
+              </h3>
+              <ul className="text-gray-600 space-y-1">
+                <li>Monday - Friday: 7am - 7pm</li>
+                <li>Saturday: 8am - 6pm</li>
+                <li>Sunday: 9am - 5pm</li>
+                <li>Emergency visits available</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section id="testimonials" className="py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              What Pet Parents Say
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Don&apos;t just take our word for it - hear from happy pet parents
+              in Bournville.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white p-8 rounded-2xl shadow-sm">
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <FontAwesomeIcon
+                    key={i}
+                    icon={faStar}
+                    className="text-yellow-400"
+                  />
+                ))}
+              </div>
+              <p className="text-gray-600 mb-6">
+                &quot;Isabel is absolutely wonderful with our Golden Retriever,
+                Max. She sends photos during walks and always goes the extra
+                mile. Highly recommend!&quot;
+              </p>
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <span className="text-blue-600 font-bold">SJ</span>
+                </div>
+                <div>
+                  <div className="font-semibold text-gray-900">
+                    Sarah Johnson
+                  </div>
+                  <div className="text-gray-700 text-sm">Bournville</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-8 rounded-2xl shadow-sm">
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <FontAwesomeIcon
+                    key={i}
+                    icon={faStar}
+                    className="text-yellow-400"
+                  />
+                ))}
+              </div>
+              <p className="text-gray-600 mb-6">
+                &quot;Professional, reliable, and genuinely cares about the
+                animals. Our cats love her visits when we&apos;re away. Peace of
+                mind guaranteed.&quot;
+              </p>
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <span className="text-green-600 font-bold">MT</span>
+                </div>
+                <div>
+                  <div className="font-semibold text-gray-900">
+                    Mike Thompson
+                  </div>
+                  <div className="text-gray-700 text-sm">Selly Oak</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-8 rounded-2xl shadow-sm">
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <FontAwesomeIcon
+                    key={i}
+                    icon={faStar}
+                    className="text-yellow-400"
+                  />
+                ))}
+              </div>
+              <p className="text-gray-600 mb-6">
+                &quot;Isabel saved us during a family emergency. She stepped in
+                immediately and took excellent care of our rescue dog. Forever
+                grateful!&quot;
+              </p>
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                  <span className="text-purple-600 font-bold">LW</span>
+                </div>
+                <div>
+                  <div className="font-semibold text-gray-900">Lisa Wilson</div>
+                  <div className="text-gray-700 text-sm">Kings Norton</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className="py-20 bg-blue-600">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+            Ready to Give Your Pet the Best Care?
+          </h2>
+          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+            Book a meet & greet today and see why pet parents in Bournville
+            trust us with their beloved companions.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a
+              href="/bookings"
+              className="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
+            >
+              Book Now
+            </a>
+            <button
+              onClick={() => setIsContactModalOpen(true)}
+              className="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
+            >
+              Contact Us
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-3 gap-8">
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                  <FontAwesomeIcon
+                    icon={faPaw}
+                    className="text-white text-sm"
+                  />
+                </div>
+                <span className="text-xl font-bold">
+                  Bournville Pet Services
+                </span>
+              </div>
+              <p className="text-gray-600 mb-4">
+                Professional, caring pet services in Bournville and surrounding
+                areas. Your pet&apos;s happiness is our mission.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Services</h3>
+              <ul className="space-y-2 text-gray-600">
+                <li>Dog Walking</li>
+                <li>Pet Sitting</li>
+                <li>Home Visits</li>
+                <li>Emergency Care</li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Contact</h3>
+              <div className="space-y-2 text-gray-600">
+                <div className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faPhone} />
+                  <span>07590 566769</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faEnvelope} />
+                  <span>isabel.sparkes@hotmail.com</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faMapMarkerAlt} />
+                  <span>Bournville, Birmingham</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-600">
+            <p>&copy; 2024 Bournville Pet Services. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+
+      {/* Contact Modal */}
+      {isContactModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-8 relative">
+            <button
+              onClick={() => setIsContactModalOpen(false)}
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+            >
+              <FontAwesomeIcon icon={faTimes} className="text-xl" />
+            </button>
+
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FontAwesomeIcon
+                  icon={faPhone}
+                  className="text-white text-2xl"
+                />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                Get in Touch
+              </h2>
+              <p className="text-gray-600">
+                Choose how you&apos;d like to contact us
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <button
+                onClick={handleEmailContact}
+                className="w-full flex items-center justify-center space-x-3 bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <FontAwesomeIcon icon={faEnvelope} />
+                <span>Send Email</span>
+              </button>
+
+              <button
+                onClick={handlePhoneCall}
+                className="w-full flex items-center justify-center space-x-3 bg-green-600 text-white p-4 rounded-lg hover:bg-green-700 transition-colors"
+              >
+                <FontAwesomeIcon icon={faPhone} />
+                <span>Call Now</span>
+              </button>
+
+              <button
+                onClick={handleWhatsApp}
+                className="w-full flex items-center justify-center space-x-3 bg-green-500 text-white p-4 rounded-lg hover:bg-green-600 transition-colors"
+              >
+                <FontAwesomeIcon icon={faPhone} />
+                <span>WhatsApp</span>
+              </button>
+            </div>
+
+            <div className="mt-6 text-center text-sm text-gray-700">
+              <p>Phone: 07590 566769</p>
+              <p>Email: isabel.sparkes@hotmail.com</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
