@@ -15,7 +15,8 @@ import {
   faCheckCircle,
   faTimesCircle,
   faSpinner,
-  faArrowLeft
+  faArrowLeft,
+  faComment
 } from '@fortawesome/free-solid-svg-icons';
 import { auth, db } from '@/lib/firebase';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
@@ -30,6 +31,8 @@ import {
   getDoc 
 } from 'firebase/firestore';
 import type { BookingRequest, User } from '@/types/booking';
+import BookingChat from '@/components/BookingChat';
+import { getUnreadMessageCount } from '@/utils/messageUtils';
 
 export default function CustomerDashboard() {
   const [user, setUser] = useState<any>(null);
@@ -37,6 +40,8 @@ export default function CustomerDashboard() {
   const [bookings, setBookings] = useState<BookingRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('bookings');
+  const [selectedChatBooking, setSelectedChatBooking] = useState<BookingRequest | null>(null);
+  const [unreadCounts, setUnreadCounts] = useState<{[bookingId: string]: number}>({});
   const router = useRouter();
 
   useEffect(() => {
@@ -79,6 +84,31 @@ export default function CustomerDashboard() {
 
     return () => unsubscribe();
   }, [router]);
+
+  // Monitor unread message counts for all bookings
+  useEffect(() => {
+    if (!user || bookings.length === 0) return;
+
+    const unsubscribeCallbacks: (() => void)[] = [];
+
+    bookings.forEach(booking => {
+      const unsubscribe = getUnreadMessageCount(
+        booking.id, 
+        user.uid, 
+        (count) => {
+          setUnreadCounts(prev => ({
+            ...prev,
+            [booking.id]: count
+          }));
+        }
+      );
+      unsubscribeCallbacks.push(unsubscribe);
+    });
+
+    return () => {
+      unsubscribeCallbacks.forEach(unsubscribe => unsubscribe());
+    };
+  }, [user, bookings]);
 
   const handleSignOut = async () => {
     try {
@@ -137,7 +167,7 @@ export default function CustomerDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <FontAwesomeIcon icon={faSpinner} className="animate-spin text-4xl text-blue-600" />
+        <FontAwesomeIcon icon={faSpinner} className="animate-spin text-4xl text-primary" />
       </div>
     );
   }
@@ -149,7 +179,7 @@ export default function CustomerDashboard() {
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                 <FontAwesomeIcon icon={faPaw} className="text-white" />
               </div>
               <div>
@@ -211,7 +241,7 @@ export default function CustomerDashboard() {
               <h2 className="text-2xl font-bold text-gray-900">My Bookings</h2>
               <a 
                 href="/bookings"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
               >
                 New Booking
               </a>
@@ -224,7 +254,7 @@ export default function CustomerDashboard() {
                 <p className="text-gray-600 mb-6">Ready to book your first pet care service?</p>
                 <a 
                   href="/bookings"
-                  className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                  className="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors"
                 >
                   Make Your First Booking
                 </a>
@@ -281,6 +311,18 @@ export default function CustomerDashboard() {
                       </div>
 
                       <div className="ml-6 flex flex-col space-y-2">
+                        <button
+                          onClick={() => setSelectedChatBooking(booking)}
+                          className="relative text-primary hover:text-primary-dark text-sm"
+                        >
+                          <FontAwesomeIcon icon={faComment} className="mr-1" />
+                          Chat
+                          {unreadCounts[booking.id] > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                              {unreadCounts[booking.id]}
+                            </span>
+                          )}
+                        </button>
                         {booking.status === 'pending' && (
                           <button
                             onClick={() => cancelBooking(booking.id)}
@@ -374,7 +416,7 @@ export default function CustomerDashboard() {
               </p>
               <button
                 onClick={() => window.location.href = 'mailto:isabel.sparkes@hotmail.com?subject=Profile Update Request'}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
               >
                 Contact Us
               </button>
@@ -382,6 +424,17 @@ export default function CustomerDashboard() {
           </div>
         )}
       </div>
+
+      {/* Chat Modal */}
+      {selectedChatBooking && userProfile && (
+        <BookingChat
+          booking={selectedChatBooking}
+          currentUserId={user.uid}
+          currentUserName={`${userProfile.firstName} ${userProfile.lastName}`}
+          isAdmin={false}
+          onClose={() => setSelectedChatBooking(null)}
+        />
+      )}
     </div>
   );
 }

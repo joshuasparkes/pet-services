@@ -15,7 +15,8 @@ import {
   faUsers,
   faPaw,
   faClipboardList,
-  faChartLine
+  faChartLine,
+  faComment
 } from '@fortawesome/free-solid-svg-icons';
 import { db } from '@/lib/firebase';
 import { 
@@ -30,6 +31,8 @@ import {
   Timestamp 
 } from 'firebase/firestore';
 import type { BookingRequest, User } from '@/types/booking';
+import BookingChat from '@/components/BookingChat';
+import { getUnreadMessageCount } from '@/utils/messageUtils';
 
 interface AdminStats {
   totalBookings: number;
@@ -54,6 +57,8 @@ export default function AdminDashboard() {
   const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<BookingRequest | null>(null);
   const [selectedCustomer, setSelectedCustomer] = useState<User | null>(null);
+  const [selectedChatBooking, setSelectedChatBooking] = useState<BookingRequest | null>(null);
+  const [unreadCounts, setUnreadCounts] = useState<{[bookingId: string]: number}>({});
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -112,6 +117,31 @@ export default function AdminDashboard() {
       unsubscribeActivity();
     };
   }, []);
+
+  // Monitor unread message counts for all bookings (admin view)
+  useEffect(() => {
+    if (bookings.length === 0) return;
+
+    const unsubscribeCallbacks: (() => void)[] = [];
+
+    bookings.forEach(booking => {
+      const unsubscribe = getUnreadMessageCount(
+        booking.id, 
+        'admin', // Admin uses 'admin' as their ID for read tracking
+        (count) => {
+          setUnreadCounts(prev => ({
+            ...prev,
+            [booking.id]: count
+          }));
+        }
+      );
+      unsubscribeCallbacks.push(unsubscribe);
+    });
+
+    return () => {
+      unsubscribeCallbacks.forEach(unsubscribe => unsubscribe());
+    };
+  }, [bookings]);
 
   const updateBookingStatus = async (bookingId: string, status: BookingRequest['status'], adminNotes?: string) => {
     setIsLoading(true);
@@ -180,7 +210,7 @@ export default function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                 <FontAwesomeIcon icon={faDashboard} className="text-white" />
               </div>
               <div>
@@ -233,7 +263,7 @@ export default function AdminDashboard() {
                     <p className="text-3xl font-bold text-gray-900">{stats.totalBookings}</p>
                   </div>
                   <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <FontAwesomeIcon icon={faCalendarAlt} className="text-blue-600 text-xl" />
+                    <FontAwesomeIcon icon={faCalendarAlt} className="text-primary text-xl" />
                   </div>
                 </div>
               </div>
@@ -301,10 +331,22 @@ export default function AdminDashboard() {
                         </button>
                         <button
                           onClick={() => setSelectedBooking(booking)}
-                          className="text-blue-600 hover:text-blue-700"
+                          className="text-primary hover:text-primary-dark"
                           title="View Details"
                         >
                           <FontAwesomeIcon icon={faEye} />
+                        </button>
+                        <button
+                          onClick={() => setSelectedChatBooking(booking)}
+                          className="relative text-purple-600 hover:text-purple-700"
+                          title="Chat"
+                        >
+                          <FontAwesomeIcon icon={faComment} />
+                          {unreadCounts[booking.id] > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                              {unreadCounts[booking.id]}
+                            </span>
+                          )}
                         </button>
                         <button
                           onClick={() => updateBookingStatus(booking.id, 'rejected')}
@@ -331,7 +373,7 @@ export default function AdminDashboard() {
                   {activityLog.slice(0, 5).map((activity) => (
                     <div key={activity.id} className="flex items-start space-x-3 py-3 border-b border-gray-100 last:border-b-0">
                       <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                        <FontAwesomeIcon icon={faClipboardList} className="text-blue-600 text-sm" />
+                        <FontAwesomeIcon icon={faClipboardList} className="text-primary text-sm" />
                       </div>
                       <div className="flex-1">
                         <p className="text-sm text-gray-900">{activity.message}</p>
@@ -388,36 +430,49 @@ export default function AdminDashboard() {
                         £{booking.price}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button
-                          onClick={() => setSelectedBooking(booking)}
-                          className="text-blue-600 hover:text-blue-900 mr-3"
-                        >
-                          View
-                        </button>
-                        {booking.status === 'pending' && (
-                          <>
-                            <button
-                              onClick={() => updateBookingStatus(booking.id, 'confirmed')}
-                              className="text-green-600 hover:text-green-900 mr-3"
-                            >
-                              Confirm
-                            </button>
-                            <button
-                              onClick={() => updateBookingStatus(booking.id, 'rejected')}
-                              className="text-red-600 hover:text-red-900"
-                            >
-                              Reject
-                            </button>
-                          </>
-                        )}
-                        {booking.status === 'confirmed' && (
+                        <div className="flex items-center space-x-3">
                           <button
-                            onClick={() => updateBookingStatus(booking.id, 'completed')}
-                            className="text-green-600 hover:text-green-900"
+                            onClick={() => setSelectedBooking(booking)}
+                            className="text-primary hover:text-blue-900"
                           >
-                            Complete
+                            View
                           </button>
-                        )}
+                          <button
+                            onClick={() => setSelectedChatBooking(booking)}
+                            className="relative text-purple-600 hover:text-purple-700"
+                          >
+                            <FontAwesomeIcon icon={faComment} />
+                            {unreadCounts[booking.id] > 0 && (
+                              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                                {unreadCounts[booking.id]}
+                              </span>
+                            )}
+                          </button>
+                          {booking.status === 'pending' && (
+                            <>
+                              <button
+                                onClick={() => updateBookingStatus(booking.id, 'confirmed')}
+                                className="text-green-600 hover:text-green-900"
+                              >
+                                Confirm
+                              </button>
+                              <button
+                                onClick={() => updateBookingStatus(booking.id, 'rejected')}
+                                className="text-red-600 hover:text-red-900"
+                              >
+                                Reject
+                              </button>
+                            </>
+                          )}
+                          {booking.status === 'confirmed' && (
+                            <button
+                              onClick={() => updateBookingStatus(booking.id, 'completed')}
+                              className="text-green-600 hover:text-green-900"
+                            >
+                              Complete
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -468,7 +523,7 @@ export default function AdminDashboard() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <button
                           onClick={() => setSelectedCustomer(user)}
-                          className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                          className="text-primary hover:text-primary-dark text-sm font-medium"
                         >
                           View Details
                         </button>
@@ -491,7 +546,7 @@ export default function AdminDashboard() {
               {activityLog.map((activity) => (
                 <div key={activity.id} className="flex items-start space-x-3 py-4 border-b border-gray-100 last:border-b-0">
                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <FontAwesomeIcon icon={faClipboardList} className="text-blue-600 text-sm" />
+                    <FontAwesomeIcon icon={faClipboardList} className="text-primary text-sm" />
                   </div>
                   <div className="flex-1">
                     <p className="text-sm text-gray-900">{activity.message}</p>
@@ -547,9 +602,20 @@ export default function AdminDashboard() {
                           <div className="flex space-x-2">
                             <button
                               onClick={() => setSelectedBooking(booking)}
-                              className="text-blue-600 hover:text-blue-700 text-sm"
+                              className="text-primary hover:text-primary-dark text-sm"
                             >
                               <FontAwesomeIcon icon={faEye} />
+                            </button>
+                            <button
+                              onClick={() => setSelectedChatBooking(booking)}
+                              className="relative text-purple-600 hover:text-purple-700 text-sm"
+                            >
+                              <FontAwesomeIcon icon={faComment} />
+                              {unreadCounts[booking.id] > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                                  {unreadCounts[booking.id]}
+                                </span>
+                              )}
                             </button>
                             <button
                               onClick={() => updateBookingStatus(booking.id, 'completed')}
@@ -597,12 +663,25 @@ export default function AdminDashboard() {
                               Customer: {getUserName(booking.userId)} | {booking.serviceType.replace('-', ' ')} | £{booking.price}
                             </div>
                           </div>
-                          <button
-                            onClick={() => setSelectedBooking(booking)}
-                            className="text-blue-600 hover:text-blue-700 text-sm"
-                          >
-                            <FontAwesomeIcon icon={faEye} />
-                          </button>
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => setSelectedBooking(booking)}
+                              className="text-primary hover:text-primary-dark text-sm"
+                            >
+                              <FontAwesomeIcon icon={faEye} />
+                            </button>
+                            <button
+                              onClick={() => setSelectedChatBooking(booking)}
+                              className="relative text-purple-600 hover:text-purple-700 text-sm"
+                            >
+                              <FontAwesomeIcon icon={faComment} />
+                              {unreadCounts[booking.id] > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                                  {unreadCounts[booking.id]}
+                                </span>
+                              )}
+                            </button>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -804,6 +883,25 @@ export default function AdminDashboard() {
                 </div>
               )}
 
+              {/* Chat Button */}
+              <div className="pt-4 border-t border-gray-200">
+                <button
+                  onClick={() => {
+                    setSelectedChatBooking(selectedBooking);
+                    setSelectedBooking(null);
+                  }}
+                  className="w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+                >
+                  <FontAwesomeIcon icon={faComment} />
+                  <span>Chat with Customer</span>
+                  {unreadCounts[selectedBooking.id] > 0 && (
+                    <span className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {unreadCounts[selectedBooking.id]}
+                    </span>
+                  )}
+                </button>
+              </div>
+
               {selectedBooking.status === 'pending' && (
                 <div className="flex space-x-4 pt-4 border-t border-gray-200">
                   <button
@@ -829,7 +927,7 @@ export default function AdminDashboard() {
                   <button
                     onClick={() => updateBookingStatus(selectedBooking.id, 'completed')}
                     disabled={isLoading}
-                    className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                    className="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
                   >
                     {isLoading ? <FontAwesomeIcon icon={faSpinner} className="animate-spin mr-2" /> : null}
                     Mark as Completed
@@ -839,6 +937,17 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Chat Modal */}
+      {selectedChatBooking && (
+        <BookingChat
+          booking={selectedChatBooking}
+          currentUserId="admin"
+          currentUserName="Isabel Sparkes"
+          isAdmin={true}
+          onClose={() => setSelectedChatBooking(null)}
+        />
       )}
     </div>
   );

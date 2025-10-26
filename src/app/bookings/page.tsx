@@ -22,7 +22,7 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
-import { collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc, getDoc, query, where, onSnapshot } from "firebase/firestore";
 import type {
   User,
   Pet,
@@ -51,6 +51,7 @@ export default function BookingsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [isRegistering, setIsRegistering] = useState(false);
+  const [existingBookings, setExistingBookings] = useState<BookingRequest[]>([]);
   const router = useRouter();
 
   // Form state
@@ -91,15 +92,73 @@ export default function BookingsPage() {
     return () => unsubscribe();
   }, []);
 
-  const generateTimeSlots = () => {
+  useEffect(() => {
+    // Listen to all confirmed bookings to check availability
+    const bookingsQuery = query(
+      collection(db, "bookings"),
+      where("status", "in", ["confirmed", "pending"])
+    );
+    
+    const unsubscribe = onSnapshot(bookingsQuery, (snapshot) => {
+      const bookingsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        date: doc.data().date.toDate(),
+        createdAt: doc.data().createdAt.toDate(),
+        updatedAt: doc.data().updatedAt.toDate(),
+      })) as BookingRequest[];
+      
+      setExistingBookings(bookingsData);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Clear selected time when date or duration changes (availability might change)
+  useEffect(() => {
+    setSelectedTime("");
+  }, [selectedDate, duration]);
+
+  const generateTimeSlots = (selectedDate: string) => {
     const slots = [];
     for (let hour = 7; hour <= 18; hour++) {
       for (let minute = 0; minute < 60; minute += 30) {
         const time = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
-        slots.push(time);
+        
+        // Check if this time slot is available
+        if (isTimeSlotAvailable(selectedDate, time)) {
+          slots.push(time);
+        }
       }
     }
     return slots;
+  };
+
+  const isTimeSlotAvailable = (dateString: string, time: string) => {
+    if (!dateString) return true;
+    
+    const selectedDate = new Date(dateString);
+    
+    // Check if any existing booking conflicts with this time slot
+    const conflicts = existingBookings.filter(booking => {
+      // Check if booking is on the same date
+      const bookingDate = new Date(booking.date);
+      const isSameDate = bookingDate.toDateString() === selectedDate.toDateString();
+      
+      if (!isSameDate) return false;
+      
+      // Calculate the proposed end time
+      const proposedEndTime = calculateEndTime(time, duration);
+      
+      // Check for time overlap
+      const bookingStartTime = booking.startTime;
+      const bookingEndTime = booking.endTime;
+      
+      // Times overlap if: proposed start < booking end AND proposed end > booking start
+      return time < bookingEndTime && proposedEndTime > bookingStartTime;
+    });
+    
+    return conflicts.length === 0;
   };
 
   const generateDateOptions = () => {
@@ -308,7 +367,7 @@ export default function BookingsPage() {
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                 <FontAwesomeIcon icon={faPaw} className="text-white" />
               </div>
               <div>
@@ -337,7 +396,7 @@ export default function BookingsPage() {
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${
                   step >= stepNumber
-                    ? "bg-blue-600 text-white"
+                    ? "bg-primary text-white"
                     : "bg-gray-200 text-gray-600"
                 }`}
               >
@@ -350,7 +409,7 @@ export default function BookingsPage() {
               {stepNumber < 4 && (
                 <div
                   className={`h-1 w-16 mx-2 ${
-                    step > stepNumber ? "bg-blue-600" : "bg-gray-200"
+                    step > stepNumber ? "bg-primary" : "bg-gray-200"
                   }`}
                 />
               )}
@@ -493,7 +552,7 @@ export default function BookingsPage() {
               <div className="flex justify-end">
                 <button
                   onClick={() => setStep(2)}
-                  className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                  className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors"
                 >
                   Continue
                   <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
@@ -542,7 +601,7 @@ export default function BookingsPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                     required
                   />
                 </div>
@@ -554,7 +613,7 @@ export default function BookingsPage() {
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                     required
                   />
                 </div>
@@ -571,7 +630,7 @@ export default function BookingsPage() {
                         type="text"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                         required
                       />
                     </div>
@@ -583,7 +642,7 @@ export default function BookingsPage() {
                         type="text"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                         required
                       />
                     </div>
@@ -598,7 +657,7 @@ export default function BookingsPage() {
                         type="tel"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                         required
                       />
                     </div>
@@ -610,7 +669,7 @@ export default function BookingsPage() {
                         type="text"
                         value={postcode}
                         onChange={(e) => setPostcode(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                         required
                       />
                     </div>
@@ -624,7 +683,7 @@ export default function BookingsPage() {
                       type="text"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                       required
                     />
                   </div>
@@ -673,7 +732,7 @@ export default function BookingsPage() {
                               onChange={(e) =>
                                 updatePet(index, "name", e.target.value)
                               }
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                               required
                             />
                           </div>
@@ -687,7 +746,7 @@ export default function BookingsPage() {
                               onChange={(e) =>
                                 updatePet(index, "breed", e.target.value)
                               }
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                               required
                             />
                           </div>
@@ -705,7 +764,7 @@ export default function BookingsPage() {
                                   parseInt(e.target.value),
                                 )
                               }
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                               min="0"
                               required
                             />
@@ -724,7 +783,7 @@ export default function BookingsPage() {
                                   parseFloat(e.target.value),
                                 )
                               }
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                               min="0"
                               step="0.1"
                               required
@@ -740,7 +799,7 @@ export default function BookingsPage() {
                             onChange={(e) =>
                               updatePet(index, "specialNeeds", e.target.value)
                             }
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                             rows={3}
                             placeholder="Any special needs, medications, or instructions..."
                           />
@@ -762,7 +821,7 @@ export default function BookingsPage() {
                 <button
                   onClick={handleAuth}
                   disabled={isLoading}
-                  className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                  className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
                 >
                   {isLoading ? (
                     <FontAwesomeIcon
@@ -815,19 +874,24 @@ export default function BookingsPage() {
                     Select Time
                   </label>
                   <div className="grid grid-cols-3 gap-2 max-h-80 overflow-y-auto">
-                    {generateTimeSlots().map((time) => (
+                    {generateTimeSlots(selectedDate).map((time) => (
                       <button
                         key={time}
                         onClick={() => setSelectedTime(time)}
                         className={`p-2 rounded text-sm ${
                           selectedTime === time
-                            ? "bg-blue-600 text-white"
+                            ? "bg-primary text-white"
                             : "bg-gray-100 hover:bg-gray-200"
                         }`}
                       >
                         {time}
                       </button>
                     ))}
+                    {selectedDate && generateTimeSlots(selectedDate).length === 0 && (
+                      <div className="col-span-3 text-center py-4 text-gray-500">
+                        No available time slots for this date. Please select a different date.
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -839,7 +903,7 @@ export default function BookingsPage() {
                 <textarea
                   value={specialInstructions}
                   onChange={(e) => setSpecialInstructions(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                   rows={4}
                   placeholder="Any special instructions for your booking..."
                 />
@@ -898,7 +962,7 @@ export default function BookingsPage() {
                 <button
                   onClick={submitBooking}
                   disabled={!selectedDate || !selectedTime || isLoading}
-                  className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                  className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
                 >
                   {isLoading ? (
                     <FontAwesomeIcon
@@ -935,13 +999,13 @@ export default function BookingsPage() {
                 </h3>
                 <div className="text-left space-y-3 text-sm">
                   <div className="flex items-center space-x-3">
-                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">
                       1
                     </div>
                     <span>Isabel will review your booking request</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">
                       2
                     </div>
                     <span>
@@ -949,7 +1013,7 @@ export default function BookingsPage() {
                     </span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">
                       3
                     </div>
                     <span>Payment will be collected on completion (cash)</span>
@@ -960,7 +1024,7 @@ export default function BookingsPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
                   onClick={() => router.push("/")}
-                  className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                  className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors"
                 >
                   Back to Home
                 </button>

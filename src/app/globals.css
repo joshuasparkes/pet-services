@@ -3,13 +3,26 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #4fa3a6;
+  --secondary: #d25f8b;
+  --tertiary: #f5d749;
+  --primary-light: #6bb4b7;
+  --primary-dark: #3d8285;
+  --secondary-light: #e07ba3;
+  --secondary-dark: #b8436f;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+  --color-secondary-light: var(--secondary-light);
+  --color-secondary-dark: var(--secondary-dark);
+  --font-raleway: var(--font-raleway);
 }
 
 @media (prefers-color-scheme: dark) {

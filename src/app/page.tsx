@@ -59,13 +59,17 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-100 z-50">
+      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-amber-100 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                <FontAwesomeIcon icon={faPaw} className="text-white text-sm" />
-              </div>
+            <div className="flex items-center space-x-3">
+              <Image
+                src="/doglogo.jpg"
+                alt="Bournville Pet Services Logo"
+                width={40}
+                height={40}
+                className="rounded-full object-cover"
+              />
               <span className="text-xl font-bold text-gray-900">
                 Bournville Pet Services
               </span>
@@ -73,52 +77,52 @@ export default function Home() {
             <div className="hidden md:flex space-x-8">
               <button
                 onClick={() => scrollToSection("services")}
-                className="text-gray-600 hover:text-blue-600 transition-colors"
+                className="text-gray-600 hover:text-primary transition-colors"
               >
                 Services
               </button>
               <button
                 onClick={() => scrollToSection("pricing")}
-                className="text-gray-600 hover:text-blue-600 transition-colors"
+                className="text-gray-600 hover:text-primary transition-colors"
               >
                 Pricing
               </button>
               <button
                 onClick={() => scrollToSection("about")}
-                className="text-gray-600 hover:text-blue-600 transition-colors"
+                className="text-gray-600 hover:text-primary transition-colors"
               >
                 About
               </button>
               <button
                 onClick={() => scrollToSection("areas")}
-                className="text-gray-600 hover:text-blue-600 transition-colors"
+                className="text-gray-600 hover:text-primary transition-colors"
               >
                 Areas
               </button>
               <button
                 onClick={() => scrollToSection("testimonials")}
-                className="text-gray-600 hover:text-blue-600 transition-colors"
+                className="text-gray-600 hover:text-primary transition-colors"
               >
                 Reviews
               </button>
               {user ? (
                 <a
                   href="/dashboard"
-                  className="text-gray-600 items-center mt-2 hover:text-blue-600 transition-colors"
+                  className="text-gray-600 items-center mt-2 hover:text-primary transition-colors"
                 >
                   My Dashboard
                 </a>
               ) : (
                 <a
                   href="/signin"
-                  className="text-gray-600 items-center mt-2 hover:text-blue-600 transition-colors"
+                  className="text-gray-600 items-center mt-2 hover:text-primary transition-colors"
                 >
                   Sign In
                 </a>
               )}
               <button
                 onClick={() => setIsContactModalOpen(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
               >
                 Contact
               </button>
@@ -143,45 +147,45 @@ export default function Home() {
             <div className="px-4 py-2 space-y-1">
               <button
                 onClick={() => scrollToSection("services")}
-                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors"
               >
                 Services
               </button>
               <button
                 onClick={() => scrollToSection("pricing")}
-                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors"
               >
                 Pricing
               </button>
               <button
                 onClick={() => scrollToSection("about")}
-                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors"
               >
                 About
               </button>
               <button
                 onClick={() => scrollToSection("areas")}
-                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors"
               >
                 Areas
               </button>
               <button
                 onClick={() => scrollToSection("testimonials")}
-                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors"
               >
                 Reviews
               </button>
               {user ? (
                 <a
                   href="/dashboard"
-                  className="block w-full text-left px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+                  className="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors"
                 >
                   My Dashboard
                 </a>
               ) : (
                 <a
                   href="/signin"
-                  className="block w-full text-left px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+                  className="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors"
                 >
                   Sign In
                 </a>
@@ -191,7 +195,7 @@ export default function Home() {
                   setIsContactModalOpen(true);
                   setIsMobileMenuOpen(false);
                 }}
-                className="block w-full text-left px-3 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-md transition-colors"
+                className="block w-full text-left px-3 py-2 bg-primary text-white hover:bg-primary-dark rounded-md transition-colors"
               >
                 Contact
               </button>
@@ -206,7 +210,7 @@ export default function Home() {
           <div className="text-center py-20">
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
               Professional Pet Care in
-              <span className="text-blue-600"> Bournville</span>
+              <span className="text-primary"> Bournville</span>
             </h1>
             <h2 className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
               Trusted, caring pet services for your beloved companions. Dog
@@ -216,13 +220,13 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a
                 href="/bookings"
-                className="bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg"
+                className="bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-dark transition-colors shadow-lg"
               >
                 Book Pet Care Now
               </a>
               <button
                 onClick={() => setIsContactModalOpen(true)}
-                className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-600 hover:text-white transition-colors"
+                className="border-2 border-primary text-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary hover:text-white transition-colors"
               >
                 Ask a Question
               </button>
@@ -231,14 +235,14 @@ export default function Home() {
               <div className="flex items-center space-x-2">
                 <FontAwesomeIcon
                   icon={faShieldAlt}
-                  className="text-green-600"
+                  className="text-secondary"
                 />
                 <span>Fully Insured</span>
               </div>
               <div className="flex items-center space-x-2">
                 <FontAwesomeIcon
                   icon={faCheckCircle}
-                  className="text-green-600"
+                  className="text-secondary"
                 />
                 <span>DBS Checked</span>
               </div>
@@ -265,8 +269,8 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-8 rounded-2xl bg-blue-50 hover:bg-blue-100 transition-colors">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="text-center p-8 rounded-2xl bg-primary-50 hover:bg-primary-100 transition-colors">
+              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
                 <FontAwesomeIcon icon={faDog} className="text-white text-2xl" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
@@ -281,28 +285,28 @@ export default function Home() {
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600 text-sm"
+                    className="text-secondary text-sm"
                   />
                   <span>30-60 minute walks</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600 text-sm"
+                    className="text-secondary text-sm"
                   />
                   <span>Photo updates</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600 text-sm"
+                    className="text-secondary text-sm"
                   />
                   <span>Flexible scheduling</span>
                 </li>
               </ul>
             </div>
 
-            <div className="text-center p-8 rounded-2xl bg-green-50 hover:bg-green-100 transition-colors">
+            <div className="text-center p-8 rounded-2xl bg-secondary-50 hover:bg-secondary-100 transition-colors">
               <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <FontAwesomeIcon
                   icon={faHome}
@@ -321,29 +325,29 @@ export default function Home() {
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600 text-sm"
+                    className="text-secondary text-sm"
                   />
                   <span>In-home care</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600 text-sm"
+                    className="text-secondary text-sm"
                   />
                   <span>Feeding & medication</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600 text-sm"
+                    className="text-secondary text-sm"
                   />
                   <span>Daily updates</span>
                 </li>
               </ul>
             </div>
 
-            <div className="text-center p-8 rounded-2xl bg-purple-50 hover:bg-purple-100 transition-colors">
-              <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="text-center p-8 rounded-2xl bg-purple-50 hover:bg-tertiary-100 transition-colors">
+              <div className="w-16 h-16 bg-tertiary rounded-full flex items-center justify-center mx-auto mb-6">
                 <FontAwesomeIcon
                   icon={faCamera}
                   className="text-white text-2xl"
@@ -360,21 +364,21 @@ export default function Home() {
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600 text-sm"
+                    className="text-secondary text-sm"
                   />
                   <span>30-minute visits</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600 text-sm"
+                    className="text-secondary text-sm"
                   />
                   <span>Feeding & water</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600 text-sm"
+                    className="text-secondary text-sm"
                   />
                   <span>Play & attention</span>
                 </li>
@@ -401,7 +405,7 @@ export default function Home() {
             {/* Dog Walking Pricing */}
             <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
               <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                   <FontAwesomeIcon
                     icon={faDog}
                     className="text-white text-2xl"
@@ -418,11 +422,11 @@ export default function Home() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-medium text-gray-900">30 Minutes</span>
-                  <span className="text-2xl font-bold text-blue-600">£15</span>
+                  <span className="text-2xl font-bold text-primary">£15</span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-medium text-gray-900">1 Hour</span>
-                  <span className="text-2xl font-bold text-blue-600">£25</span>
+                  <span className="text-2xl font-bold text-primary">£25</span>
                 </div>
               </div>
 
@@ -430,28 +434,28 @@ export default function Home() {
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600"
+                    className="text-secondary"
                   />
                   <span>Individual or group walks</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600"
+                    className="text-secondary"
                   />
                   <span>Photo updates during walk</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600"
+                    className="text-secondary"
                   />
                   <span>Flexible scheduling</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600"
+                    className="text-secondary"
                   />
                   <span>Exercise tailored to your dog</span>
                 </li>
@@ -461,13 +465,13 @@ export default function Home() {
             {/* Pet Sitting Pricing */}
             <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100 relative">
               <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+                <span className="bg-primary text-white px-4 py-1 rounded-full text-sm font-medium">
                   Most Popular
                 </span>
               </div>
 
               <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">
                   <FontAwesomeIcon
                     icon={faHome}
                     className="text-white text-2xl"
@@ -484,19 +488,19 @@ export default function Home() {
                   <span className="font-medium text-gray-900">
                     Half Day (4hrs)
                   </span>
-                  <span className="text-2xl font-bold text-green-600">£40</span>
+                  <span className="text-2xl font-bold text-secondary">£40</span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-medium text-gray-900">
                     Full Day (8hrs)
                   </span>
-                  <span className="text-2xl font-bold text-green-600">£70</span>
+                  <span className="text-2xl font-bold text-secondary">£70</span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-medium text-gray-900">
                     Overnight (12hrs)
                   </span>
-                  <span className="text-2xl font-bold text-green-600">£90</span>
+                  <span className="text-2xl font-bold text-secondary">£90</span>
                 </div>
               </div>
 
@@ -504,28 +508,28 @@ export default function Home() {
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600"
+                    className="text-secondary"
                   />
                   <span>Feeding & medication</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600"
+                    className="text-secondary"
                   />
                   <span>Daily updates & photos</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600"
+                    className="text-secondary"
                   />
                   <span>Playtime & companionship</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600"
+                    className="text-secondary"
                   />
                   <span>Home security presence</span>
                 </li>
@@ -535,7 +539,7 @@ export default function Home() {
             {/* Home Visits Pricing */}
             <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
               <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-tertiary rounded-full flex items-center justify-center mx-auto mb-4">
                   <FontAwesomeIcon
                     icon={faCamera}
                     className="text-white text-2xl"
@@ -550,13 +554,13 @@ export default function Home() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-medium text-gray-900">30 Minutes</span>
-                  <span className="text-2xl font-bold text-purple-600">
+                  <span className="text-2xl font-bold text-gray-900">
                     £20
                   </span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-medium text-gray-900">1 Hour</span>
-                  <span className="text-2xl font-bold text-purple-600">
+                  <span className="text-2xl font-bold text-gray-900">
                     £35
                   </span>
                 </div>
@@ -566,28 +570,28 @@ export default function Home() {
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600"
+                    className="text-secondary"
                   />
                   <span>Feeding & fresh water</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600"
+                    className="text-secondary"
                   />
                   <span>Medication administration</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600"
+                    className="text-secondary"
                   />
                   <span>Play & attention</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
-                    className="text-green-600"
+                    className="text-secondary"
                   />
                   <span>Litter tray cleaning</span>
                 </li>
@@ -596,7 +600,7 @@ export default function Home() {
           </div>
 
           <div className="mt-12 text-center">
-            <div className="bg-blue-50 rounded-2xl p-8 max-w-4xl mx-auto">
+            <div className="bg-primary-50 rounded-2xl p-8 max-w-4xl mx-auto">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
                 Payment Information
               </h3>
@@ -626,7 +630,7 @@ export default function Home() {
               <div className="mt-8">
                 <a
                   href="/bookings"
-                  className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors"
+                  className="inline-block bg-primary text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-primary-dark transition-colors"
                 >
                   Book Your Service Today
                 </a>
@@ -659,13 +663,13 @@ export default function Home() {
               </p>
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-                  <div className="text-2xl font-bold text-blue-600 mb-2">
+                  <div className="text-2xl font-bold text-primary mb-2">
                     5+
                   </div>
                   <div className="text-gray-600">Years Experience</div>
                 </div>
                 <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-                  <div className="text-2xl font-bold text-blue-600 mb-2">
+                  <div className="text-2xl font-bold text-primary mb-2">
                     100+
                   </div>
                   <div className="text-gray-600">Happy Pets</div>
@@ -687,14 +691,14 @@ export default function Home() {
                 <div className="flex items-center justify-center space-x-2 text-gray-600">
                   <FontAwesomeIcon
                     icon={faShieldAlt}
-                    className="text-green-600"
+                    className="text-secondary"
                   />
                   <span>Fully Insured & DBS Checked</span>
                 </div>
                 <div className="flex items-center justify-center space-x-2 text-gray-600">
                   <FontAwesomeIcon
                     icon={faMapMarkerAlt}
-                    className="text-blue-600"
+                    className="text-primary"
                   />
                   <span>Local to Bournville</span>
                 </div>
@@ -718,10 +722,10 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-6 rounded-lg bg-blue-50">
+            <div className="text-center p-6 rounded-lg bg-primary-50">
               <FontAwesomeIcon
                 icon={faMapMarkerAlt}
-                className="text-blue-600 text-3xl mb-4"
+                className="text-primary text-3xl mb-4"
               />
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 Primary Areas
@@ -733,10 +737,10 @@ export default function Home() {
                 <li>Cotteridge</li>
               </ul>
             </div>
-            <div className="text-center p-6 rounded-lg bg-green-50">
+            <div className="text-center p-6 rounded-lg bg-secondary-50">
               <FontAwesomeIcon
                 icon={faMapMarkerAlt}
-                className="text-green-600 text-3xl mb-4"
+                className="text-secondary text-3xl mb-4"
               />
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 Extended Areas
@@ -751,7 +755,7 @@ export default function Home() {
             <div className="text-center p-6 rounded-lg bg-purple-50">
               <FontAwesomeIcon
                 icon={faClock}
-                className="text-purple-600 text-3xl mb-4"
+                className="text-gray-900 text-3xl mb-4"
               />
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 Service Hours
@@ -798,7 +802,7 @@ export default function Home() {
               </p>
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span className="text-blue-600 font-bold">SJ</span>
+                  <span className="text-primary font-bold">SJ</span>
                 </div>
                 <div>
                   <div className="font-semibold text-gray-900">
@@ -826,7 +830,7 @@ export default function Home() {
               </p>
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <span className="text-green-600 font-bold">MT</span>
+                  <span className="text-secondary font-bold">MT</span>
                 </div>
                 <div>
                   <div className="font-semibold text-gray-900">
@@ -854,7 +858,7 @@ export default function Home() {
               </p>
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                  <span className="text-purple-600 font-bold">LW</span>
+                  <span className="text-gray-900 font-bold">LW</span>
                 </div>
                 <div>
                   <div className="font-semibold text-gray-900">Lisa Wilson</div>
@@ -867,25 +871,25 @@ export default function Home() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-20 bg-blue-600">
+      <section className="py-20 bg-gradient-to-br from-primary to-primary-dark">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             Ready to Give Your Pet the Best Care?
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
             Book a meet & greet today and see why pet parents in Bournville
             trust us with their beloved companions.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a
               href="/bookings"
-              className="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
+              className="bg-white text-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
             >
               Book Now
             </a>
             <button
               onClick={() => setIsContactModalOpen(true)}
-              className="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
+              className="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-primary transition-colors"
             >
               Contact Us
             </button>
@@ -898,13 +902,14 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8">
             <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                  <FontAwesomeIcon
-                    icon={faPaw}
-                    className="text-white text-sm"
-                  />
-                </div>
+              <div className="flex items-center space-x-3 mb-4">
+                <Image
+                  src="/doglogo.jpg"
+                  alt="Bournville Pet Services Logo"
+                  width={32}
+                  height={32}
+                  className="rounded-full object-cover"
+                />
                 <span className="text-xl font-bold">
                   Bournville Pet Services
                 </span>
@@ -959,7 +964,7 @@ export default function Home() {
             </button>
 
             <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                 <FontAwesomeIcon
                   icon={faPhone}
                   className="text-white text-2xl"
@@ -976,7 +981,7 @@ export default function Home() {
             <div className="space-y-4">
               <button
                 onClick={handleEmailContact}
-                className="w-full flex items-center justify-center space-x-3 bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 transition-colors"
+                className="w-full flex items-center justify-center space-x-3 bg-primary text-white p-4 rounded-lg hover:bg-primary-dark transition-colors"
               >
                 <FontAwesomeIcon icon={faEnvelope} />
                 <span>Send Email</span>
@@ -992,7 +997,7 @@ export default function Home() {
 
               <button
                 onClick={handleWhatsApp}
-                className="w-full flex items-center justify-center space-x-3 bg-green-500 text-white p-4 rounded-lg hover:bg-green-600 transition-colors"
+                className="w-full flex items-center justify-center space-x-3 bg-secondary-500 text-white p-4 rounded-lg hover:bg-green-600 transition-colors"
               >
                 <FontAwesomeIcon icon={faPhone} />
                 <span>WhatsApp</span>

@@ -1,20 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Raleway } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const raleway = Raleway({
+  variable: "--font-raleway",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weights: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
   title: "Bournville Pet Services | Professional Dog Walking & Pet Care in Bournville, Birmingham",
   description: "Trusted pet care services in Bournville and surrounding Birmingham areas. Professional dog walking, pet sitting, and home visits by Isabel Sparkes. Fully insured and DBS checked. Book your pet care today!",
+  icons: {
+    icon: '/doglogo.jpg',
+    shortcut: '/doglogo.jpg',
+    apple: '/doglogo.jpg',
+  },
   keywords: [
     "dog walking Bournville",
     "pet sitting Birmingham", 
@@ -50,9 +51,9 @@ export const metadata: Metadata = {
     siteName: 'Bournville Pet Services',
     images: [
       {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
+        url: '/doglogo.jpg',
+        width: 800,
+        height: 800,
         alt: 'Bournville Pet Services - Professional Pet Care',
       },
     ],
@@ -61,7 +62,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Bournville Pet Services | Professional Dog Walking & Pet Care',
     description: 'Trusted pet care services in Bournville and surrounding Birmingham areas.',
-    images: ['/og-image.jpg'],
+    images: ['/doglogo.jpg'],
   },
   alternates: {
     canonical: 'https://bournvillepetservices.co.uk',
@@ -89,7 +90,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${raleway.variable} font-raleway antialiased`}
       >
         {children}
       </body>

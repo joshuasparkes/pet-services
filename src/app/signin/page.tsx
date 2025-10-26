@@ -56,7 +56,7 @@ export default function SignInPage() {
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
             <FontAwesomeIcon icon={faPaw} className="text-white text-2xl" />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
@@ -89,7 +89,7 @@ export default function SignInPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                   placeholder="Enter your email"
                   required
                 />
@@ -109,7 +109,7 @@ export default function SignInPage() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                   placeholder="Enter your password"
                   required
                 />
@@ -119,7 +119,7 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center space-x-2"
+              className="w-full bg-primary text-white py-3 px-4 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 flex items-center justify-center space-x-2"
             >
               {isLoading ? (
                 <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
@@ -135,7 +135,7 @@ export default function SignInPage() {
               Don't have an account?{" "}
               <a
                 href="/bookings"
-                className="text-blue-600 hover:text-blue-700 font-medium"
+                className="text-primary hover:text-primary-dark font-medium"
               >
                 Create one while booking
               </a>

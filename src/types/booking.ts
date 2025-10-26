@@ -20,6 +20,17 @@ export interface User {
   createdAt: Date;
 }
 
+export interface Message {
+  id: string;
+  bookingId: string;
+  senderId: string;
+  senderType: 'customer' | 'admin';
+  senderName: string;
+  content: string;
+  timestamp: Date;
+  readBy: string[]; // Array of user IDs who have read this message
+}
+
 export interface BookingRequest {
   id: string;
   userId: string;
@@ -37,6 +48,7 @@ export interface BookingRequest {
   createdAt: Date;
   updatedAt: Date;
   adminNotes?: string;
+  unreadMessages?: number; // Count of unread messages for this user
 }
 
 export interface TimeSlot {
