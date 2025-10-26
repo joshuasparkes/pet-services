@@ -53,6 +53,7 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats>({ totalBookings: 0, pendingRequests: 0, completedBookings: 0, totalRevenue: 0 });
   const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<BookingRequest | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -200,9 +201,10 @@ export default function AdminDashboard() {
         <div className="flex space-x-1 bg-gray-100 rounded-lg p-1 mb-8">
           {[
             { id: 'dashboard', label: 'Dashboard', icon: faDashboard },
-            { id: 'bookings', label: 'Bookings', icon: faCalendarAlt },
+            { id: 'calendar', label: 'Calendar', icon: faCalendarAlt },
+            { id: 'bookings', label: 'Bookings', icon: faClipboardList },
             { id: 'customers', label: 'Customers', icon: faUsers },
-            { id: 'activity', label: 'Activity Log', icon: faClipboardList }
+            { id: 'activity', label: 'Activity Log', icon: faBell }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -440,6 +442,7 @@ export default function AdminDashboard() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Phone</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Pets</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Bookings</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -461,6 +464,14 @@ export default function AdminDashboard() {
                         <div className="text-sm text-gray-900">
                           {bookings.filter(b => b.userId === user.id).length} bookings
                         </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <button
+                          onClick={() => setSelectedCustomer(user)}
+                          className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                        >
+                          View Details
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -494,7 +505,242 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
+
+        {/* Calendar Tab */}
+        {activeTab === 'calendar' && (
+          <div className="bg-white rounded-xl shadow-sm">
+            <div className="p-6 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-900">Booking Calendar</h2>
+            </div>
+            <div className="p-6">
+              {/* Upcoming Bookings */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Upcoming Bookings</h3>
+                <div className="space-y-4">
+                  {bookings
+                    .filter(booking => booking.date >= new Date() && booking.status === 'confirmed')
+                    .sort((a, b) => a.date.getTime() - b.date.getTime())
+                    .map((booking) => (
+                      <div key={booking.id} className="border border-gray-200 rounded-lg p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-4">
+                              <div className="text-sm font-medium text-gray-900">
+                                {formatDate(booking.date)}
+                              </div>
+                              <div className="text-sm text-gray-600">
+                                {booking.startTime} - {booking.endTime}
+                              </div>
+                              <div className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
+                                {booking.serviceType.replace('-', ' ')}
+                              </div>
+                            </div>
+                            <div className="mt-2 text-sm text-gray-600">
+                              Customer: {getUserName(booking.userId)} | Price: £{booking.price}
+                            </div>
+                            {booking.specialInstructions && (
+                              <div className="mt-2 text-sm text-gray-500">
+                                Instructions: {booking.specialInstructions}
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => setSelectedBooking(booking)}
+                              className="text-blue-600 hover:text-blue-700 text-sm"
+                            >
+                              <FontAwesomeIcon icon={faEye} />
+                            </button>
+                            <button
+                              onClick={() => updateBookingStatus(booking.id, 'completed')}
+                              className="text-green-600 hover:text-green-700 text-sm"
+                              title="Mark Complete"
+                            >
+                              <FontAwesomeIcon icon={faCheck} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  {bookings.filter(booking => booking.date >= new Date() && booking.status === 'confirmed').length === 0 && (
+                    <p className="text-gray-700 text-center py-8">No upcoming bookings</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Past Bookings */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Past Bookings</h3>
+                <div className="space-y-4">
+                  {bookings
+                    .filter(booking => booking.date < new Date() || booking.status === 'completed')
+                    .sort((a, b) => b.date.getTime() - a.date.getTime())
+                    .slice(0, 10)
+                    .map((booking) => (
+                      <div key={booking.id} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-4">
+                              <div className="text-sm font-medium text-gray-900">
+                                {formatDate(booking.date)}
+                              </div>
+                              <div className="text-sm text-gray-600">
+                                {booking.startTime} - {booking.endTime}
+                              </div>
+                              <div className={`px-2 py-1 rounded text-xs font-medium ${
+                                booking.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                              }`}>
+                                {booking.status}
+                              </div>
+                            </div>
+                            <div className="mt-2 text-sm text-gray-600">
+                              Customer: {getUserName(booking.userId)} | {booking.serviceType.replace('-', ' ')} | £{booking.price}
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => setSelectedBooking(booking)}
+                            className="text-blue-600 hover:text-blue-700 text-sm"
+                          >
+                            <FontAwesomeIcon icon={faEye} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  {bookings.filter(booking => booking.date < new Date() || booking.status === 'completed').length === 0 && (
+                    <p className="text-gray-700 text-center py-8">No past bookings</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Customer Details Modal */}
+      {selectedCustomer && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {selectedCustomer.firstName} {selectedCustomer.lastName}
+                </h2>
+                <button
+                  onClick={() => setSelectedCustomer(null)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <FontAwesomeIcon icon={faTimes} className="text-xl" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6">
+              {/* Contact Information */}
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Email</label>
+                    <p className="text-gray-900">{selectedCustomer.email}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Phone</label>
+                    <p className="text-gray-900">{selectedCustomer.phone}</p>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="text-sm font-medium text-gray-700">Address</label>
+                    <p className="text-gray-900">{selectedCustomer.address}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Postcode</label>
+                    <p className="text-gray-900">{selectedCustomer.postcode}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Customer Since</label>
+                    <p className="text-gray-900">{selectedCustomer.createdAt.toLocaleDateString('en-GB')}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Pet Information */}
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Pet Information</h3>
+                <div className="space-y-4">
+                  {selectedCustomer.pets?.map((pet, index) => (
+                    <div key={pet.id} className="border border-gray-200 rounded-lg p-4">
+                      <h4 className="font-semibold text-gray-900 mb-2">{pet.name}</h4>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                        <div>
+                          <span className="font-medium text-gray-700">Breed:</span>
+                          <p className="text-gray-900">{pet.breed}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">Age:</span>
+                          <p className="text-gray-900">{pet.age} years</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">Weight:</span>
+                          <p className="text-gray-900">{pet.weight}kg</p>
+                        </div>
+                      </div>
+                      {pet.specialNeeds && (
+                        <div className="mt-3 p-2 bg-yellow-50 rounded">
+                          <span className="font-medium text-gray-700">Special Needs:</span>
+                          <p className="text-gray-600 text-sm mt-1">{pet.specialNeeds}</p>
+                        </div>
+                      )}
+                    </div>
+                  )) || (
+                    <p className="text-gray-600">No pets registered.</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Booking History */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Booking History</h3>
+                <div className="space-y-3">
+                  {bookings
+                    .filter(booking => booking.userId === selectedCustomer.id)
+                    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+                    .map((booking) => (
+                      <div key={booking.id} className="border border-gray-200 rounded-lg p-3">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <div className="flex items-center space-x-2 mb-1">
+                              <span className="font-medium text-gray-900">
+                                {booking.serviceType.replace('-', ' ')}
+                              </span>
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                booking.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
+                                booking.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                'bg-red-100 text-red-800'
+                              }`}>
+                                {booking.status}
+                              </span>
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {formatDate(booking.date)} at {booking.startTime} | £{booking.price}
+                            </div>
+                            {booking.specialInstructions && (
+                              <div className="text-sm text-gray-500 mt-1">
+                                {booking.specialInstructions}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  {bookings.filter(booking => booking.userId === selectedCustomer.id).length === 0 && (
+                    <p className="text-gray-600">No bookings found.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Booking Details Modal */}
       {selectedBooking && (

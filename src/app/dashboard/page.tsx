@@ -73,7 +73,7 @@ export default function CustomerDashboard() {
 
         return () => unsubscribeBookings();
       } else {
-        router.push('/bookings');
+        router.push('/signin');
       }
     });
 

@@ -144,6 +144,58 @@ export default function BookingsPage() {
     setIsLoading(true);
     try {
       if (isRegistering) {
+        // Validate all required fields for registration
+        if (!firstName.trim()) {
+          alert("Please enter your first name");
+          setIsLoading(false);
+          return;
+        }
+        if (!lastName.trim()) {
+          alert("Please enter your last name");
+          setIsLoading(false);
+          return;
+        }
+        if (!phone.trim()) {
+          alert("Please enter your phone number");
+          setIsLoading(false);
+          return;
+        }
+        if (!address.trim()) {
+          alert("Please enter your address");
+          setIsLoading(false);
+          return;
+        }
+        if (!postcode.trim()) {
+          alert("Please enter your postcode");
+          setIsLoading(false);
+          return;
+        }
+        
+        // Validate pet information
+        for (let i = 0; i < pets.length; i++) {
+          const pet = pets[i];
+          if (!pet.name.trim()) {
+            alert(`Please enter a name for Pet ${i + 1}`);
+            setIsLoading(false);
+            return;
+          }
+          if (!pet.breed.trim()) {
+            alert(`Please enter the breed for Pet ${i + 1}`);
+            setIsLoading(false);
+            return;
+          }
+          if (!pet.age || pet.age <= 0) {
+            alert(`Please enter a valid age for Pet ${i + 1}`);
+            setIsLoading(false);
+            return;
+          }
+          if (!pet.weight || pet.weight <= 0) {
+            alert(`Please enter a valid weight for Pet ${i + 1}`);
+            setIsLoading(false);
+            return;
+          }
+        }
+
         const userCredential = await createUserWithEmailAndPassword(
           auth,
           email,

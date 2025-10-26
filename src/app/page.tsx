@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { auth } from '@/lib/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPaw,
@@ -104,11 +104,18 @@ export default function Home() {
               {user ? (
                 <a
                   href="/dashboard"
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                  className="text-gray-600 items-center mt-2 hover:text-blue-600 transition-colors"
                 >
                   My Dashboard
                 </a>
-              ) : null}
+              ) : (
+                <a
+                  href="/signin"
+                  className="text-gray-600 items-center mt-2 hover:text-blue-600 transition-colors"
+                >
+                  Sign In
+                </a>
+              )}
               <button
                 onClick={() => setIsContactModalOpen(true)}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
@@ -171,7 +178,14 @@ export default function Home() {
                 >
                   My Dashboard
                 </a>
-              ) : null}
+              ) : (
+                <a
+                  href="/signin"
+                  className="block w-full text-left px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+                >
+                  Sign In
+                </a>
+              )}
               <button
                 onClick={() => {
                   setIsContactModalOpen(true);
@@ -378,7 +392,8 @@ export default function Home() {
               Transparent Pricing
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              No hidden fees, no surprises. Just honest pricing for quality pet care services in Bournville.
+              No hidden fees, no surprises. Just honest pricing for quality pet
+              care services in Bournville.
             </p>
           </div>
 
@@ -387,12 +402,19 @@ export default function Home() {
             <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
               <div className="text-center mb-6">
                 <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FontAwesomeIcon icon={faDog} className="text-white text-2xl" />
+                  <FontAwesomeIcon
+                    icon={faDog}
+                    className="text-white text-2xl"
+                  />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Dog Walking</h3>
-                <p className="text-gray-600">Professional walks tailored to your dog</p>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  Dog Walking
+                </h3>
+                <p className="text-gray-600">
+                  Professional walks tailored to your dog
+                </p>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-medium text-gray-900">30 Minutes</span>
@@ -403,22 +425,34 @@ export default function Home() {
                   <span className="text-2xl font-bold text-blue-600">£25</span>
                 </div>
               </div>
-              
+
               <ul className="mt-6 space-y-3 text-sm text-gray-600">
                 <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600"
+                  />
                   <span>Individual or group walks</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600"
+                  />
                   <span>Photo updates during walk</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600"
+                  />
                   <span>Flexible scheduling</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600"
+                  />
                   <span>Exercise tailored to your dog</span>
                 </li>
               </ul>
@@ -431,45 +465,68 @@ export default function Home() {
                   Most Popular
                 </span>
               </div>
-              
+
               <div className="text-center mb-6">
                 <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FontAwesomeIcon icon={faHome} className="text-white text-2xl" />
+                  <FontAwesomeIcon
+                    icon={faHome}
+                    className="text-white text-2xl"
+                  />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Pet Sitting</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  Pet Sitting
+                </h3>
                 <p className="text-gray-600">In-home care while you're away</p>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="font-medium text-gray-900">Half Day (4hrs)</span>
+                  <span className="font-medium text-gray-900">
+                    Half Day (4hrs)
+                  </span>
                   <span className="text-2xl font-bold text-green-600">£40</span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="font-medium text-gray-900">Full Day (8hrs)</span>
+                  <span className="font-medium text-gray-900">
+                    Full Day (8hrs)
+                  </span>
                   <span className="text-2xl font-bold text-green-600">£70</span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="font-medium text-gray-900">Overnight (12hrs)</span>
+                  <span className="font-medium text-gray-900">
+                    Overnight (12hrs)
+                  </span>
                   <span className="text-2xl font-bold text-green-600">£90</span>
                 </div>
               </div>
-              
+
               <ul className="mt-6 space-y-3 text-sm text-gray-600">
                 <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600"
+                  />
                   <span>Feeding & medication</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600"
+                  />
                   <span>Daily updates & photos</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600"
+                  />
                   <span>Playtime & companionship</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600"
+                  />
                   <span>Home security presence</span>
                 </li>
               </ul>
@@ -479,38 +536,59 @@ export default function Home() {
             <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
               <div className="text-center mb-6">
                 <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FontAwesomeIcon icon={faCamera} className="text-white text-2xl" />
+                  <FontAwesomeIcon
+                    icon={faCamera}
+                    className="text-white text-2xl"
+                  />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Home Visits</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  Home Visits
+                </h3>
                 <p className="text-gray-600">Quick check-ins and care</p>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-medium text-gray-900">30 Minutes</span>
-                  <span className="text-2xl font-bold text-purple-600">£20</span>
+                  <span className="text-2xl font-bold text-purple-600">
+                    £20
+                  </span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                   <span className="font-medium text-gray-900">1 Hour</span>
-                  <span className="text-2xl font-bold text-purple-600">£35</span>
+                  <span className="text-2xl font-bold text-purple-600">
+                    £35
+                  </span>
                 </div>
               </div>
-              
+
               <ul className="mt-6 space-y-3 text-sm text-gray-600">
                 <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600"
+                  />
                   <span>Feeding & fresh water</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600"
+                  />
                   <span>Medication administration</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600"
+                  />
                   <span>Play & attention</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-600"
+                  />
                   <span>Litter tray cleaning</span>
                 </li>
               </ul>
@@ -519,10 +597,14 @@ export default function Home() {
 
           <div className="mt-12 text-center">
             <div className="bg-blue-50 rounded-2xl p-8 max-w-4xl mx-auto">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Payment Information</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Payment Information
+              </h3>
               <div className="grid md:grid-cols-2 gap-8 text-left">
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">💳 Payment Methods</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">
+                    💳 Payment Methods
+                  </h4>
                   <ul className="space-y-2 text-gray-600">
                     <li>• Cash on completion</li>
                     <li>• Bank transfer available</li>
@@ -530,7 +612,9 @@ export default function Home() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">📋 What's Included</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">
+                    📋 What's Included
+                  </h4>
                   <ul className="space-y-2 text-gray-600">
                     <li>• Fully insured service</li>
                     <li>• DBS checked carer</li>
@@ -540,7 +624,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="mt-8">
-                <a 
+                <a
                   href="/bookings"
                   className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors"
                 >
