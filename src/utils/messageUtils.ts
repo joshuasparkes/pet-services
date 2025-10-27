@@ -13,11 +13,18 @@ export const getUnreadMessageCount = (
   );
 
   return onSnapshot(messagesQuery, (snapshot) => {
-    const messages = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      timestamp: doc.data().timestamp.toDate(),
-    })) as Message[];
+    const messages = snapshot.docs
+      .map(doc => {
+        const data = doc.data();
+        // Handle serverTimestamp which might be null on first write
+        const timestamp = data.timestamp?.toDate ? data.timestamp.toDate() : new Date();
+        return {
+          id: doc.id,
+          ...data,
+          timestamp,
+        };
+      })
+      .filter(msg => msg.timestamp) as Message[]; // Filter out messages without timestamps
 
     // Count messages not read by this user
     const unreadCount = messages.filter(
