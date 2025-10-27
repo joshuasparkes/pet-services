@@ -19,6 +19,8 @@ import {
   doc,
   updateDoc,
   arrayUnion,
+  serverTimestamp,
+  Timestamp,
 } from "firebase/firestore";
 import type { Message, BookingRequest } from "@/types/booking";
 
@@ -51,11 +53,18 @@ export default function BookingChat({
     );
 
     const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
-      const messagesData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-        timestamp: doc.data().timestamp.toDate(),
-      })) as Message[];
+      const messagesData = snapshot.docs
+        .map((doc) => {
+          const data = doc.data();
+          // Handle serverTimestamp which might be null on first write
+          const timestamp = data.timestamp?.toDate ? data.timestamp.toDate() : new Date();
+          return {
+            id: doc.id,
+            ...data,
+            timestamp,
+          };
+        })
+        .filter((msg) => msg.timestamp) as Message[]; // Filter out messages without timestamps
 
       setMessages(messagesData);
 
@@ -101,7 +110,7 @@ export default function BookingChat({
         senderType: isAdmin ? "admin" : "customer",
         senderName: currentUserName,
         content: newMessage.trim(),
-        timestamp: new Date(),
+        timestamp: serverTimestamp(),
         readBy: [currentUserId], // Sender has already "read" their own message
       });
 

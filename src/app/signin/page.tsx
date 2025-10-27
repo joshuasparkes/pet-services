@@ -119,7 +119,7 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-primary text-white py-3 px-4 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 flex items-center justify-center space-x-2"
+              className="w-full cursor-pointer bg-primary text-white py-3 px-4 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 flex items-center justify-center space-x-2"
             >
               {isLoading ? (
                 <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
@@ -147,7 +147,7 @@ export default function SignInPage() {
         <div className="text-center">
           <button
             onClick={() => router.push("/")}
-            className="text-gray-600 hover:text-gray-900 flex items-center justify-center space-x-2 mx-auto"
+            className="text-gray-600 cursor-pointer hover:text-gray-900 flex items-center justify-center space-x-2 mx-auto"
           >
             <FontAwesomeIcon icon={faArrowLeft} />
             <span>Back to Home</span>

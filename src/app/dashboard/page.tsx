@@ -38,7 +38,7 @@ export default function CustomerDashboard() {
   const [user, setUser] = useState<any>(null);
   const [userProfile, setUserProfile] = useState<User | null>(null);
   const [bookings, setBookings] = useState<BookingRequest[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('bookings');
   const [selectedChatBooking, setSelectedChatBooking] = useState<BookingRequest | null>(null);
   const [unreadCounts, setUnreadCounts] = useState<{[bookingId: string]: number}>({});
@@ -48,7 +48,7 @@ export default function CustomerDashboard() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUser(user);
-        
+
         // Get user profile
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         if (userDoc.exists()) {
@@ -60,7 +60,7 @@ export default function CustomerDashboard() {
           collection(db, 'bookings'),
           where('userId', '==', user.uid)
         );
-        
+
         const unsubscribeBookings = onSnapshot(bookingsQuery, (snapshot) => {
           const bookingsData = snapshot.docs.map(doc => ({
             id: doc.id,
@@ -69,11 +69,10 @@ export default function CustomerDashboard() {
             createdAt: doc.data().createdAt.toDate(),
             updatedAt: doc.data().updatedAt.toDate(),
           })) as BookingRequest[];
-          
+
           // Sort by date (newest first)
           bookingsData.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
           setBookings(bookingsData);
-          setLoading(false);
         });
 
         return () => unsubscribeBookings();
@@ -164,14 +163,6 @@ export default function CustomerDashboard() {
     });
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <FontAwesomeIcon icon={faSpinner} className="animate-spin text-4xl text-primary" />
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -190,14 +181,14 @@ export default function CustomerDashboard() {
             <div className="flex items-center space-x-4">
               <button 
                 onClick={() => router.push('/')}
-                className="text-gray-600 hover:text-gray-900 flex items-center space-x-2"
+                className="text-gray-600 cursor-pointer pointer-cursor hover:text-gray-900 flex items-center space-x-2"
               >
                 <FontAwesomeIcon icon={faArrowLeft} />
                 <span>Back to Home</span>
               </button>
               <button 
                 onClick={handleSignOut}
-                className="text-gray-600 hover:text-red-600 flex items-center space-x-2"
+                className="text-gray-600 cursor-pointer hover:text-red-600 flex items-center space-x-2"
               >
                 <FontAwesomeIcon icon={faSignOutAlt} />
                 <span>Sign Out</span>
@@ -212,7 +203,7 @@ export default function CustomerDashboard() {
         <div className="flex space-x-1 bg-gray-100 rounded-lg p-1 mb-8">
           <button
             onClick={() => setActiveTab('bookings')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`flex cursor-pointer items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === 'bookings' 
                 ? 'bg-white text-gray-900 shadow-sm' 
                 : 'text-gray-600 hover:text-gray-900'
@@ -223,7 +214,7 @@ export default function CustomerDashboard() {
           </button>
           <button
             onClick={() => setActiveTab('profile')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`flex cursor-pointer items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === 'profile' 
                 ? 'bg-white text-gray-900 shadow-sm' 
                 : 'text-gray-600 hover:text-gray-900'
@@ -416,7 +407,7 @@ export default function CustomerDashboard() {
               </p>
               <button
                 onClick={() => window.location.href = 'mailto:isabel.sparkes@hotmail.com?subject=Profile Update Request'}
-                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
+                className="bg-primary cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
               >
                 Contact Us
               </button>

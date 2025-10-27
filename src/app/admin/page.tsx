@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faDashboard, 
-  faCalendarAlt, 
-  faEnvelope, 
-  faPoundSign, 
-  faCheck, 
-  faTimes, 
+import {
+  faDashboard,
+  faCalendarAlt,
+  faEnvelope,
+  faPoundSign,
+  faCheck,
+  faTimes,
   faEye,
   faSpinner,
   faBell,
@@ -16,7 +16,10 @@ import {
   faPaw,
   faClipboardList,
   faChartLine,
-  faComment
+  faComment,
+  faCheckCircle,
+  faUser,
+  faClock
 } from '@fortawesome/free-solid-svg-icons';
 import { db } from '@/lib/firebase';
 import { 
@@ -50,6 +53,9 @@ interface ActivityLogEntry {
 }
 
 export default function AdminDashboard() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [authError, setAuthError] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [bookings, setBookings] = useState<BookingRequest[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -203,6 +209,83 @@ export default function AdminDashboard() {
     return user ? `${user.firstName} ${user.lastName}` : 'Unknown User';
   };
 
+  // Check for stored authentication on mount
+  useEffect(() => {
+    const authStatus = sessionStorage.getItem('adminAuthenticated');
+    if (authStatus === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === 'harvey') {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('adminAuthenticated', 'true');
+      setAuthError('');
+    } else {
+      setAuthError('Incorrect password');
+      setPassword('');
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem('adminAuthenticated');
+    setPassword('');
+  };
+
+  // Show login screen if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+              <FontAwesomeIcon icon={faDashboard} className="text-white text-2xl" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Access</h1>
+            <p className="text-gray-600">Bournville Pet Services</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                Admin Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-gray-900"
+                placeholder="Enter admin password"
+                autoFocus
+                required
+              />
+              {authError && (
+                <p className="mt-2 text-sm text-red-600">{authError}</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-primary text-white px-4 py-3 rounded-lg hover:bg-primary-dark transition-colors font-medium cursor-pointer"
+            >
+              Access Dashboard
+            </button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <a href="/" className="text-sm text-gray-600 hover:text-primary cursor-pointer">
+              ← Back to Home
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -218,9 +301,18 @@ export default function AdminDashboard() {
                 <p className="text-gray-600">Bournville Pet Services</p>
               </div>
             </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600">Welcome back, Isabel</p>
-              <p className="text-xs text-gray-700">{new Date().toLocaleDateString('en-GB')}</p>
+            <div className="flex items-center space-x-4">
+              <div className="text-right">
+                <p className="text-sm text-gray-600">Welcome back, Isabel</p>
+                <p className="text-xs text-gray-700">{new Date().toLocaleDateString('en-GB')}</p>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 transition-colors cursor-pointer"
+                title="Logout"
+              >
+                Logout
+              </button>
             </div>
           </div>
         </div>
@@ -228,7 +320,7 @@ export default function AdminDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Tabs */}
-        <div className="flex space-x-1 bg-gray-100 rounded-lg p-1 mb-8">
+        <div className="flex cursor-pointer space-x-1 bg-gray-100 rounded-lg p-1 mb-8">
           {[
             { id: 'dashboard', label: 'Dashboard', icon: faDashboard },
             { id: 'calendar', label: 'Calendar', icon: faCalendarAlt },
@@ -239,7 +331,7 @@ export default function AdminDashboard() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`flex cursor-pointer items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 activeTab === tab.id 
                   ? 'bg-white text-gray-900 shadow-sm' 
                   : 'text-gray-600 hover:text-gray-900'
@@ -286,7 +378,7 @@ export default function AdminDashboard() {
                     <p className="text-sm font-medium text-gray-600">Completed</p>
                     <p className="text-3xl font-bold text-green-600">{stats.completedBookings}</p>
                   </div>
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                  <div className="w-12 cursor-pointer h-12 bg-green-100 rounded-lg flex items-center justify-center">
                     <FontAwesomeIcon icon={faCheck} className="text-green-600 text-xl" />
                   </div>
                 </div>
@@ -314,47 +406,74 @@ export default function AdminDashboard() {
                 </div>
                 <div className="p-6">
                   {bookings.filter(b => b.status === 'pending').slice(0, 5).map((booking) => (
-                    <div key={booking.id} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
-                      <div>
-                        <p className="font-medium text-gray-900">{getUserName(booking.userId)}</p>
-                        <p className="text-sm text-gray-600">
-                          {booking.serviceType} - {formatDate(booking.date)} at {booking.startTime}
-                        </p>
-                      </div>
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => updateBookingStatus(booking.id, 'confirmed')}
-                          className="text-green-600 hover:text-green-700"
-                          title="Approve"
-                        >
-                          <FontAwesomeIcon icon={faCheck} />
-                        </button>
-                        <button
-                          onClick={() => setSelectedBooking(booking)}
-                          className="text-primary hover:text-primary-dark"
-                          title="View Details"
-                        >
-                          <FontAwesomeIcon icon={faEye} />
-                        </button>
-                        <button
-                          onClick={() => setSelectedChatBooking(booking)}
-                          className="relative text-purple-600 hover:text-purple-700"
-                          title="Chat"
-                        >
-                          <FontAwesomeIcon icon={faComment} />
-                          {unreadCounts[booking.id] > 0 && (
-                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                              {unreadCounts[booking.id]}
+                    <div key={booking.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow mb-3 last:mb-0">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          {/* Customer Name */}
+                          <div className="flex items-center space-x-2 mb-3">
+                            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                              <FontAwesomeIcon icon={faUser} className="text-white text-sm" />
+                            </div>
+                            <p className="font-semibold text-gray-900 text-base">{getUserName(booking.userId)}</p>
+                          </div>
+
+                          {/* Service Type Badge */}
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                              <FontAwesomeIcon icon={faPaw} className="mr-1.5" />
+                              {booking.serviceType.replace('-', ' ')}
                             </span>
-                          )}
-                        </button>
-                        <button
-                          onClick={() => updateBookingStatus(booking.id, 'rejected')}
-                          className="text-red-600 hover:text-red-700"
-                          title="Reject"
-                        >
-                          <FontAwesomeIcon icon={faTimes} />
-                        </button>
+                          </div>
+
+                          {/* Date and Time Info */}
+                          <div className="grid grid-cols-2 gap-2 text-sm">
+                            <div className="flex items-center text-gray-700">
+                              <FontAwesomeIcon icon={faCalendarAlt} className="mr-2 text-gray-400" />
+                              <span className="font-medium">{formatDate(booking.date)}</span>
+                            </div>
+                            <div className="flex items-center text-gray-700">
+                              <FontAwesomeIcon icon={faClock} className="mr-2 text-gray-400" />
+                              <span className="font-medium">{booking.startTime}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-col gap-2">
+                          <button
+                            onClick={() => updateBookingStatus(booking.id, 'confirmed')}
+                            className="flex items-center space-x-1 px-3 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors cursor-pointer text-sm font-medium whitespace-nowrap"
+                          >
+                            <FontAwesomeIcon icon={faCheck} className="text-base" />
+                            <span>Approve</span>
+                          </button>
+                          <button
+                            onClick={() => setSelectedBooking(booking)}
+                            className="flex items-center space-x-1 px-3 py-2 bg-blue-50 text-primary rounded-lg hover:bg-blue-100 transition-colors cursor-pointer text-sm font-medium whitespace-nowrap"
+                          >
+                            <FontAwesomeIcon icon={faEye} className="text-base" />
+                            <span>View</span>
+                          </button>
+                          <button
+                            onClick={() => setSelectedChatBooking(booking)}
+                            className="relative flex items-center space-x-1 px-3 py-2 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors cursor-pointer text-sm font-medium whitespace-nowrap"
+                          >
+                            <FontAwesomeIcon icon={faComment} className="text-base" />
+                            <span>Chat</span>
+                            {unreadCounts[booking.id] > 0 && (
+                              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                                {unreadCounts[booking.id]}
+                              </span>
+                            )}
+                          </button>
+                          <button
+                            onClick={() => updateBookingStatus(booking.id, 'rejected')}
+                            className="flex items-center space-x-1 px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors cursor-pointer text-sm font-medium whitespace-nowrap"
+                          >
+                            <FontAwesomeIcon icon={faTimes} className="text-base" />
+                            <span>Reject</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -430,20 +549,22 @@ export default function AdminDashboard() {
                         £{booking.price}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div className="flex items-center space-x-3">
+                        <div className="flex items-center flex-wrap gap-2">
                           <button
                             onClick={() => setSelectedBooking(booking)}
-                            className="text-primary hover:text-blue-900"
+                            className="flex items-center space-x-1 px-3 py-1.5 bg-blue-50 text-primary rounded-md hover:bg-blue-100 transition-colors cursor-pointer"
                           >
-                            View
+                            <FontAwesomeIcon icon={faEye} className="text-sm" />
+                            <span>View</span>
                           </button>
                           <button
                             onClick={() => setSelectedChatBooking(booking)}
-                            className="relative text-purple-600 hover:text-purple-700"
+                            className="relative flex items-center space-x-1 px-3 py-1.5 bg-purple-50 text-purple-700 rounded-md hover:bg-purple-100 transition-colors cursor-pointer"
                           >
-                            <FontAwesomeIcon icon={faComment} />
+                            <FontAwesomeIcon icon={faComment} className="text-sm" />
+                            <span>Chat</span>
                             {unreadCounts[booking.id] > 0 && (
-                              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold">
                                 {unreadCounts[booking.id]}
                               </span>
                             )}
@@ -452,24 +573,27 @@ export default function AdminDashboard() {
                             <>
                               <button
                                 onClick={() => updateBookingStatus(booking.id, 'confirmed')}
-                                className="text-green-600 hover:text-green-900"
+                                className="flex items-center space-x-1 px-3 py-1.5 bg-green-50 text-green-700 rounded-md hover:bg-green-100 transition-colors cursor-pointer"
                               >
-                                Confirm
+                                <FontAwesomeIcon icon={faCheck} className="text-sm" />
+                                <span>Confirm</span>
                               </button>
                               <button
                                 onClick={() => updateBookingStatus(booking.id, 'rejected')}
-                                className="text-red-600 hover:text-red-900"
+                                className="flex items-center space-x-1 px-3 py-1.5 bg-red-50 text-red-700 rounded-md hover:bg-red-100 transition-colors cursor-pointer"
                               >
-                                Reject
+                                <FontAwesomeIcon icon={faTimes} className="text-sm" />
+                                <span>Reject</span>
                               </button>
                             </>
                           )}
                           {booking.status === 'confirmed' && (
                             <button
                               onClick={() => updateBookingStatus(booking.id, 'completed')}
-                              className="text-green-600 hover:text-green-900"
+                              className="flex items-center space-x-1 px-3 py-1.5 bg-green-50 text-green-700 rounded-md hover:bg-green-100 transition-colors cursor-pointer"
                             >
-                              Complete
+                              <FontAwesomeIcon icon={faCheckCircle} className="text-sm" />
+                              <span>Complete</span>
                             </button>
                           )}
                         </div>
@@ -523,9 +647,10 @@ export default function AdminDashboard() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <button
                           onClick={() => setSelectedCustomer(user)}
-                          className="text-primary hover:text-primary-dark text-sm font-medium"
+                          className="flex items-center space-x-1 px-3 py-1.5 bg-blue-50 text-primary rounded-md hover:bg-blue-100 transition-colors cursor-pointer text-sm font-medium"
                         >
-                          View Details
+                          <FontAwesomeIcon icon={faEye} className="text-sm" />
+                          <span>View Details</span>
                         </button>
                       </td>
                     </tr>
@@ -599,30 +724,32 @@ export default function AdminDashboard() {
                               </div>
                             )}
                           </div>
-                          <div className="flex space-x-2">
+                          <div className="flex flex-wrap gap-2">
                             <button
                               onClick={() => setSelectedBooking(booking)}
-                              className="text-primary hover:text-primary-dark text-sm"
+                              className="flex items-center space-x-1 px-3 py-1.5 bg-blue-50 text-primary rounded-md hover:bg-blue-100 transition-colors cursor-pointer text-sm"
                             >
-                              <FontAwesomeIcon icon={faEye} />
+                              <FontAwesomeIcon icon={faEye} className="text-sm" />
+                              <span>View</span>
                             </button>
                             <button
                               onClick={() => setSelectedChatBooking(booking)}
-                              className="relative text-purple-600 hover:text-purple-700 text-sm"
+                              className="relative flex items-center space-x-1 px-3 py-1.5 bg-purple-50 text-purple-700 rounded-md hover:bg-purple-100 transition-colors cursor-pointer text-sm"
                             >
-                              <FontAwesomeIcon icon={faComment} />
+                              <FontAwesomeIcon icon={faComment} className="text-sm" />
+                              <span>Chat</span>
                               {unreadCounts[booking.id] > 0 && (
-                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold">
                                   {unreadCounts[booking.id]}
                                 </span>
                               )}
                             </button>
                             <button
                               onClick={() => updateBookingStatus(booking.id, 'completed')}
-                              className="text-green-600 hover:text-green-700 text-sm"
-                              title="Mark Complete"
+                              className="flex items-center space-x-1 px-3 py-1.5 bg-green-50 text-green-700 rounded-md hover:bg-green-100 transition-colors cursor-pointer text-sm"
                             >
-                              <FontAwesomeIcon icon={faCheck} />
+                              <FontAwesomeIcon icon={faCheckCircle} className="text-sm" />
+                              <span>Complete</span>
                             </button>
                           </div>
                         </div>
@@ -663,20 +790,22 @@ export default function AdminDashboard() {
                               Customer: {getUserName(booking.userId)} | {booking.serviceType.replace('-', ' ')} | £{booking.price}
                             </div>
                           </div>
-                          <div className="flex space-x-2">
+                          <div className="flex flex-wrap gap-2">
                             <button
                               onClick={() => setSelectedBooking(booking)}
-                              className="text-primary hover:text-primary-dark text-sm"
+                              className="flex items-center space-x-1 px-3 py-1.5 bg-blue-50 text-primary rounded-md hover:bg-blue-100 transition-colors cursor-pointer text-sm"
                             >
-                              <FontAwesomeIcon icon={faEye} />
+                              <FontAwesomeIcon icon={faEye} className="text-sm" />
+                              <span>View</span>
                             </button>
                             <button
                               onClick={() => setSelectedChatBooking(booking)}
-                              className="relative text-purple-600 hover:text-purple-700 text-sm"
+                              className="relative flex items-center space-x-1 px-3 py-1.5 bg-purple-50 text-purple-700 rounded-md hover:bg-purple-100 transition-colors cursor-pointer text-sm"
                             >
-                              <FontAwesomeIcon icon={faComment} />
+                              <FontAwesomeIcon icon={faComment} className="text-sm" />
+                              <span>Chat</span>
                               {unreadCounts[booking.id] > 0 && (
-                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold">
                                   {unreadCounts[booking.id]}
                                 </span>
                               )}

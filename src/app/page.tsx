@@ -77,52 +77,52 @@ export default function Home() {
             <div className="hidden md:flex space-x-8">
               <button
                 onClick={() => scrollToSection("services")}
-                className="text-gray-600 hover:text-primary transition-colors"
+                className="text-gray-600 cursor-pointer hover:text-primary transition-colors"
               >
                 Services
               </button>
               <button
                 onClick={() => scrollToSection("pricing")}
-                className="text-gray-600 hover:text-primary transition-colors"
+                className="text-gray-600 cursor-pointer hover:text-primary transition-colors"
               >
                 Pricing
               </button>
               <button
                 onClick={() => scrollToSection("about")}
-                className="text-gray-600 hover:text-primary transition-colors"
+                className="text-gray-600 cursor-pointer hover:text-primary transition-colors"
               >
                 About
               </button>
               <button
                 onClick={() => scrollToSection("areas")}
-                className="text-gray-600 hover:text-primary transition-colors"
+                className="text-gray-600 cursor-pointer hover:text-primary transition-colors"
               >
                 Areas
               </button>
               <button
                 onClick={() => scrollToSection("testimonials")}
-                className="text-gray-600 hover:text-primary transition-colors"
+                className="text-gray-600 cursor-pointer hover:text-primary transition-colors"
               >
                 Reviews
               </button>
               {user ? (
                 <a
                   href="/dashboard"
-                  className="text-gray-600 items-center mt-2 hover:text-primary transition-colors"
+                  className="text-gray-600 cursor-pointer items-center mt-2 hover:text-primary transition-colors"
                 >
                   My Dashboard
                 </a>
               ) : (
                 <a
                   href="/signin"
-                  className="text-gray-600 items-center mt-2 hover:text-primary transition-colors"
+                  className="text-gray-600 cursor-pointer items-center mt-2 hover:text-primary transition-colors"
                 >
                   Sign In
                 </a>
               )}
               <button
                 onClick={() => setIsContactModalOpen(true)}
-                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
+                className="bg-primary cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
               >
                 Contact
               </button>
@@ -130,7 +130,7 @@ export default function Home() {
             <div className="md:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-gray-600 hover:text-gray-900 p-2"
+                className="text-gray-600 cursor-pointer hover:text-gray-900 p-2"
               >
                 <FontAwesomeIcon
                   icon={isMobileMenuOpen ? faTimes : faBars}
@@ -226,7 +226,7 @@ export default function Home() {
               </a>
               <button
                 onClick={() => setIsContactModalOpen(true)}
-                className="border-2 border-primary text-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary hover:text-white transition-colors"
+                className="border-2 cursor-pointer border-primary text-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary hover:text-white transition-colors"
               >
                 Ask a Question
               </button>
@@ -889,7 +889,7 @@ export default function Home() {
             </a>
             <button
               onClick={() => setIsContactModalOpen(true)}
-              className="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-primary transition-colors"
+              className="border-2 cursor-pointer border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-primary transition-colors"
             >
               Contact Us
             </button>
@@ -947,7 +947,9 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-600">
-            <p>&copy; 2024 Bournville Pet Services. All rights reserved.</p>
+            <p>
+              &copy; <a href="/admin" className="hover:text-gray-400 transition-colors">2024</a> Bournville Pet Services. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
@@ -958,7 +960,7 @@ export default function Home() {
           <div className="bg-white rounded-2xl max-w-md w-full p-8 relative">
             <button
               onClick={() => setIsContactModalOpen(false)}
-              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+              className="absolute  cursor-pointer top-4 right-4 text-gray-600 hover:text-gray-800"
             >
               <FontAwesomeIcon icon={faTimes} className="text-xl" />
             </button>
@@ -981,7 +983,7 @@ export default function Home() {
             <div className="space-y-4">
               <button
                 onClick={handleEmailContact}
-                className="w-full flex items-center justify-center space-x-3 bg-primary text-white p-4 rounded-lg hover:bg-primary-dark transition-colors"
+                className="w-full cursor-pointer flex items-center justify-center space-x-3 bg-primary text-white p-4 rounded-lg hover:bg-primary-dark transition-colors"
               >
                 <FontAwesomeIcon icon={faEnvelope} />
                 <span>Send Email</span>
@@ -989,7 +991,7 @@ export default function Home() {
 
               <button
                 onClick={handlePhoneCall}
-                className="w-full flex items-center justify-center space-x-3 bg-green-600 text-white p-4 rounded-lg hover:bg-green-700 transition-colors"
+                className="w-full cursor-pointer flex items-center justify-center space-x-3 bg-green-600 text-white p-4 rounded-lg hover:bg-green-700 transition-colors"
               >
                 <FontAwesomeIcon icon={faPhone} />
                 <span>Call Now</span>
@@ -997,7 +999,7 @@ export default function Home() {
 
               <button
                 onClick={handleWhatsApp}
-                className="w-full flex items-center justify-center space-x-3 bg-secondary-500 text-white p-4 rounded-lg hover:bg-green-600 transition-colors"
+                className="w-full cursor-pointer flex items-center justify-center space-x-3 bg-blue-500 text-white p-4 rounded-lg hover:bg-green-600 transition-colors"
               >
                 <FontAwesomeIcon icon={faPhone} />
                 <span>WhatsApp</span>

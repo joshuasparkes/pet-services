@@ -86,8 +86,28 @@ export default function BookingsPage() {
   ]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
+      if (user) {
+        // User is already logged in, fetch their data
+        try {
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data() as User;
+            setEmail(userData.email);
+            setFirstName(userData.firstName);
+            setLastName(userData.lastName);
+            setPhone(userData.phone);
+            setAddress(userData.address);
+            setPostcode(userData.postcode);
+            if (userData.pets) {
+              setPets(userData.pets);
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -379,7 +399,7 @@ export default function BookingsPage() {
             </div>
             <button
               onClick={() => router.push("/")}
-              className="text-gray-600 hover:text-gray-900"
+              className="text-gray-600 cursor-pointer hover:text-gray-900 cursor-pointer"
             >
               <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
               Back to Home
@@ -446,16 +466,16 @@ export default function BookingsPage() {
                   <button
                     key={service.type}
                     onClick={() => setServiceType(service.type as any)}
-                    className={`p-6 rounded-xl border-2 text-left transition-all ${
+                    className={`p-6 cursor-pointer rounded-xl border-2 text-left transition-all ${
                       serviceType === service.type
-                        ? "border-blue-600 bg-blue-50"
+                        ? "border-primary bg-blue-50"
                         : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
                     <div className="flex items-center mb-4">
                       <FontAwesomeIcon
                         icon={getServiceIcon(service.type)}
-                        className={`text-2xl ${serviceType === service.type ? "text-blue-600" : "text-gray-400"}`}
+                        className={`text-2xl ${serviceType === service.type ? "text-primary" : "text-gray-400"}`}
                       />
                     </div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -470,16 +490,16 @@ export default function BookingsPage() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Duration & Pricing
                 </h3>
-                <div className="grid text-black md:grid-cols-2 gap-4">
+                <div className="grid cursor-pointer text-black md:grid-cols-2 gap-4">
                   {serviceType === "dog-walking" &&
                     Object.entries(servicePricing["dog-walking"]).map(
                       ([dur, price]) => (
                         <button
                           key={dur}
                           onClick={() => setDuration(dur)}
-                          className={`p-4 rounded-lg border-2 text-left ${
+                          className={`p-4 cursor-pointer rounded-lg border-2 text-left ${
                             duration === dur
-                              ? "border-blue-600 bg-blue-50"
+                              ? "border-primary bg-blue-50"
                               : "border-gray-200"
                           }`}
                         >
@@ -487,7 +507,7 @@ export default function BookingsPage() {
                             <span className="font-medium">
                               {dur === "30min" ? "30 minutes" : "1 hour"}
                             </span>
-                            <span className="text-blue-600 font-bold">
+                            <span className="text-primary font-bold">
                               £{price}
                             </span>
                           </div>
@@ -501,9 +521,9 @@ export default function BookingsPage() {
                         <button
                           key={dur}
                           onClick={() => setDuration(dur)}
-                          className={`p-4 rounded-lg border-2 text-left ${
+                          className={`p-4 cursor-pointer rounded-lg border-2 text-left ${
                             duration === dur
-                              ? "border-blue-600 bg-blue-50"
+                              ? "border-primary bg-blue-50"
                               : "border-gray-200"
                           }`}
                         >
@@ -515,7 +535,7 @@ export default function BookingsPage() {
                                   ? "Full Day (8hrs)"
                                   : "Overnight (12hrs)"}
                             </span>
-                            <span className="text-blue-600 font-bold">
+                            <span className="text-primary font-bold">
                               £{price}
                             </span>
                           </div>
@@ -529,9 +549,9 @@ export default function BookingsPage() {
                         <button
                           key={dur}
                           onClick={() => setDuration(dur)}
-                          className={`p-4 rounded-lg border-2 text-left ${
+                          className={`p-4 cursor-pointer rounded-lg border-2 text-left ${
                             duration === dur
-                              ? "border-blue-600 bg-blue-50"
+                              ? "border-primary bg-blue-50"
                               : "border-gray-200"
                           }`}
                         >
@@ -539,7 +559,7 @@ export default function BookingsPage() {
                             <span className="font-medium">
                               {dur === "30min" ? "30 minutes" : "1 hour"}
                             </span>
-                            <span className="text-blue-600 font-bold">
+                            <span className="text-primary font-bold">
                               £{price}
                             </span>
                           </div>
@@ -551,8 +571,8 @@ export default function BookingsPage() {
 
               <div className="flex justify-end">
                 <button
-                  onClick={() => setStep(2)}
-                  className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors"
+                  onClick={() => setStep(user ? 3 : 2)}
+                  className="bg-primary cursor-pointer text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors"
                 >
                   Continue
                   <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
@@ -571,7 +591,7 @@ export default function BookingsPage() {
               <div className="flex bg-gray-100 rounded-lg p-1 mb-6">
                 <button
                   onClick={() => setIsRegistering(false)}
-                  className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex-1 cursor-pointer py-2 px-4 rounded-md text-sm font-medium transition-colors ${
                     !isRegistering
                       ? "bg-white text-gray-900 shadow-sm"
                       : "text-gray-600"
@@ -581,7 +601,7 @@ export default function BookingsPage() {
                 </button>
                 <button
                   onClick={() => setIsRegistering(true)}
-                  className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex-1 cursor-pointer py-2 px-4 rounded-md text-sm font-medium transition-colors ${
                     isRegistering
                       ? "bg-white text-gray-900 shadow-sm"
                       : "text-gray-600"
@@ -696,7 +716,7 @@ export default function BookingsPage() {
                       </h3>
                       <button
                         onClick={addPet}
-                        className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                        className="text-blue-600 hover:text-blue-700 text-sm font-medium cursor-pointer"
                       >
                         + Add Another Pet
                       </button>
@@ -714,7 +734,7 @@ export default function BookingsPage() {
                           {pets.length > 1 && (
                             <button
                               onClick={() => removePet(index)}
-                              className="text-red-600 hover:text-red-700 text-sm"
+                              className="text-red-600 hover:text-red-700 text-sm cursor-pointer"
                             >
                               Remove
                             </button>
@@ -813,7 +833,7 @@ export default function BookingsPage() {
               <div className="flex justify-between">
                 <button
                   onClick={() => setStep(1)}
-                  className="text-gray-600 hover:text-gray-900"
+                  className="text-gray-600 cursor-pointer hover:text-gray-900"
                 >
                   <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
                   Back
@@ -821,7 +841,7 @@ export default function BookingsPage() {
                 <button
                   onClick={handleAuth}
                   disabled={isLoading}
-                  className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
+                  className="bg-primary cursor-pointer text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
                 >
                   {isLoading ? (
                     <FontAwesomeIcon
@@ -853,9 +873,9 @@ export default function BookingsPage() {
                       <button
                         key={date}
                         onClick={() => setSelectedDate(date)}
-                        className={`p-3 rounded-lg border-2 text-sm text-blac ${
+                        className={`p-3 cursor-pointer rounded-lg border-2 text-sm text-black ${
                           selectedDate === date
-                            ? "border-blue-600 bg-blue-50 text-blue-600"
+                            ? "border-primary bg-blue-50 text-primary"
                             : "border-gray-200  hover:border-gray-300"
                         }`}
                       >
@@ -878,7 +898,7 @@ export default function BookingsPage() {
                       <button
                         key={time}
                         onClick={() => setSelectedTime(time)}
-                        className={`p-2 rounded text-sm ${
+                        className={`p-2 cursor-pointer rounded text-sm ${
                           selectedTime === time
                             ? "bg-primary text-white"
                             : "bg-gray-100 hover:bg-gray-200"
@@ -942,7 +962,7 @@ export default function BookingsPage() {
                   <div className="border-t pt-2 mt-2">
                     <div className="flex justify-between text-lg font-bold">
                       <span>Total:</span>
-                      <span className="text-blue-600">£{calculatePrice()}</span>
+                      <span className="text-primary">£{calculatePrice()}</span>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
                       Payment on completion (cash)
@@ -953,8 +973,8 @@ export default function BookingsPage() {
 
               <div className="flex justify-between">
                 <button
-                  onClick={() => setStep(2)}
-                  className="text-gray-600 hover:text-gray-900"
+                  onClick={() => setStep(user ? 1 : 2)}
+                  className="text-gray-600 hover:text-gray-900 cursor-pointer"
                 >
                   <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
                   Back
@@ -962,7 +982,7 @@ export default function BookingsPage() {
                 <button
                   onClick={submitBooking}
                   disabled={!selectedDate || !selectedTime || isLoading}
-                  className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
+                  className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   {isLoading ? (
                     <FontAwesomeIcon
@@ -1024,7 +1044,7 @@ export default function BookingsPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
                   onClick={() => router.push("/")}
-                  className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors"
+                  className="bg-primary cursor-pointer text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors cursor-pointer"
                 >
                   Back to Home
                 </button>
@@ -1035,7 +1055,7 @@ export default function BookingsPage() {
                     setSelectedTime("");
                     setSpecialInstructions("");
                   }}
-                  className="border border-blue-600 text-blue-600 px-8 py-3 rounded-lg hover:bg-blue-50 transition-colors"
+                  className="border border-primary text-primary px-8 py-3 rounded-lg hover:bg-blue-50 transition-colors cursor-pointer"
                 >
                   Book Another Service
                 </button>

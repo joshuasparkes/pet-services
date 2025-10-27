@@ -1,0 +1,153 @@
+═══════════════════════════════════════════════════════════════════
+  BOURNVILLE PET SERVICES - ADMIN GUIDE FOR ISABEL
+═══════════════════════════════════════════════════════════════════
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📱 HOW TO ACCESS THE ADMIN DASHBOARD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Open your website
+2. Scroll to the BOTTOM of the page
+3. Click on "2024" in the copyright text
+4. Enter password: harvey
+5. Click "Access Dashboard"
+
+THAT'S IT! You're in.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 MANAGING BOOKINGS (WHAT YOU'LL DO MOST)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+When a customer books:
+1. You'll see it in "Pending Requests" on your dashboard
+2. Click "View" to see all details
+3. Click "Approve" if you can do it
+4. Click "Reject" if you can't
+
+To chat with customers:
+- Click the purple "Chat" button
+- Type your message
+- They'll see it in their dashboard
+
+To mark a job complete:
+- Go to "Bookings" tab
+- Find the booking
+- Click green "Complete" button
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👥 HOW IT WORKS FOR CUSTOMERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+NEW CUSTOMERS:
+1. Click "Book Now" on your website
+2. Choose service (dog walking, pet sitting, etc.)
+3. Enter their email, password, name, address, pet details
+4. Pick date and time
+5. Submit booking
+6. Wait for YOU to approve it
+
+RETURNING CUSTOMERS:
+1. They log in (no need to enter details again!)
+2. Choose service, date, time
+3. Submit - done!
+
+They can:
+- See all their bookings in "My Dashboard"
+- Chat with you about bookings
+- Cancel pending bookings
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧪 HOW TO TEST THE SITE (DO THIS NOW!)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1 - Test as a Customer:
+1. Open site in a NEW private/incognito window
+2. Click "Book Now"
+3. Fill out the form with fake details (use your email)
+4. Pick tomorrow's date, any time
+5. Submit the booking
+
+STEP 2 - Approve as Admin:
+1. Go back to admin (click 2024 in footer, password: harvey)
+2. See your test booking in "Pending Requests"
+3. Click "View" to see details
+4. Click "Approve"
+
+STEP 3 - Test the Chat:
+1. Click purple "Chat" button on that booking
+2. Send a test message
+3. Open the private window again
+4. Go to "My Dashboard"
+5. See your message! Reply back
+6. Check admin - you'll see their reply
+
+DONE! Now delete that test booking if you want.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 UNDERSTANDING YOUR DASHBOARD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DASHBOARD TAB:
+- Shows numbers: total bookings, pending, completed, money earned
+- Pending Requests: new bookings waiting for you
+- Recent Activity: what's been happening
+
+BOOKINGS TAB:
+- ALL bookings in one place
+- Filter by status (pending, confirmed, etc.)
+- Approve, view, chat, or mark complete
+
+CUSTOMERS TAB:
+- List of all your customers
+- See their pets and booking history
+- Click "View Details" to see everything
+
+CALENDAR TAB:
+- See upcoming confirmed bookings
+- See past completed bookings
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ IMPORTANT THINGS TO REMEMBER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ Check "Pending Requests" daily
+✓ Reply to customer chats quickly
+✓ Mark jobs "Complete" when finished
+✓ The system blocks double-bookings automatically
+✓ Click "Logout" when done (top right)
+✓ Password is: harvey (don't share it!)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❓ QUICK TROUBLESHOOTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+"I can't log in to admin"
+→ Make sure you clicked "2024" in footer and typed: harvey
+
+"Customer says they can't book"
+→ They might be trying to book a time you already have booked
+→ Or picking a past date
+
+"I don't see a booking"
+→ Refresh the page (F5 or reload button)
+
+"Chat not working"
+→ Refresh the page
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📞 HELP NEEDED?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Contact: Joshua (the person who built this for you!)
+
+
+═══════════════════════════════════════════════════════════════════
+That's everything! It's easier than it looks - just try it! 🐕
+═══════════════════════════════════════════════════════════════════
