@@ -66,8 +66,8 @@ A modern Next.js web application for a pet care business, featuring a marketing 
    NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
    # Email Configuration
-   SMTP_USER=your_email@gmail.com
-   SMTP_PASS=your_app_password
+   SMTP_USER=joshsparkes6@gmail.com
+   SMTP_PASS=pzcmnbhpmenycgyq
    ADMIN_EMAIL=isabel.sparkes@hotmail.com
    ```
 

@@ -15,6 +15,7 @@ import {
   faArrowRight,
   faCheck,
   faSpinner,
+  faHandshake,
 } from "@fortawesome/free-solid-svg-icons";
 import { auth, db } from "@/lib/firebase";
 import {
@@ -31,6 +32,9 @@ import type {
 } from "@/types/booking";
 
 const servicePricing: ServicePricing = {
+  "meet-greet": {
+    "30min": 0,
+  },
   "group-walk": {
     "30min": 13,
     "60min": 17,
@@ -60,8 +64,8 @@ export default function BookingsPage() {
 
   // Form state
   const [serviceType, setServiceType] = useState<
-    "group-walk" | "solo-walk" | "drop-in" | "day-care" | "overnight"
-  >("group-walk");
+    "meet-greet" | "group-walk" | "solo-walk" | "drop-in" | "day-care" | "overnight"
+  >("meet-greet");
   const [duration, setDuration] = useState("30min");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
@@ -122,7 +126,7 @@ export default function BookingsPage() {
       collection(db, "bookings"),
       where("status", "in", ["confirmed", "pending"])
     );
-    
+
     const unsubscribe = onSnapshot(bookingsQuery, (snapshot) => {
       const bookingsData = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -131,17 +135,24 @@ export default function BookingsPage() {
         createdAt: doc.data().createdAt.toDate(),
         updatedAt: doc.data().updatedAt.toDate(),
       })) as BookingRequest[];
-      
+
       setExistingBookings(bookingsData);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [user]);
 
   // Clear selected time when date or duration changes (availability might change)
   useEffect(() => {
     setSelectedTime("");
   }, [selectedDate, duration]);
+
+  // Auto-set duration for meet-greet service
+  useEffect(() => {
+    if (serviceType === "meet-greet") {
+      setDuration("30min");
+    }
+  }, [serviceType]);
 
   const generateTimeSlots = (selectedDate: string) => {
     const slots = [];
@@ -277,6 +288,12 @@ export default function BookingsPage() {
             setIsLoading(false);
             return;
           }
+          // For meet & greet bookings, require medical and behavioral information
+          if (serviceType === "meet-greet" && !pet.specialNeeds?.trim()) {
+            alert(`Please provide medical and behavioral information for Pet ${i + 1}`);
+            setIsLoading(false);
+            return;
+          }
         }
 
         const userCredential = await createUserWithEmailAndPassword(
@@ -330,6 +347,33 @@ export default function BookingsPage() {
       };
 
       await addDoc(collection(db, "bookings"), bookingData);
+
+      // Send email notification to admin
+      try {
+        await fetch('/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            type: 'booking_request',
+            data: {
+              customerName: `${firstName} ${lastName}`,
+              customerEmail: email,
+              serviceType: serviceType.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+              date: new Date(selectedDate).toLocaleDateString('en-GB'),
+              startTime: selectedTime,
+              endTime: calculateEndTime(selectedTime, duration),
+              price: calculatePrice(),
+              specialInstructions,
+            },
+          }),
+        });
+      } catch (emailError) {
+        console.error('Failed to send email notification:', emailError);
+        // Don't block the booking if email fails
+      }
+
       setStep(4);
     } catch (error) {
       console.error("Booking submission error:", error);
@@ -360,7 +404,9 @@ export default function BookingsPage() {
   };
 
   const calculatePrice = () => {
-    if (serviceType === "group-walk") {
+    if (serviceType === "meet-greet") {
+      return servicePricing["meet-greet"]["30min"];
+    } else if (serviceType === "group-walk") {
       return servicePricing["group-walk"][duration as "30min" | "60min"];
     } else if (serviceType === "solo-walk") {
       return servicePricing["solo-walk"][duration as "30min" | "60min"];
@@ -376,6 +422,8 @@ export default function BookingsPage() {
 
   const getServiceIcon = (service: string) => {
     switch (service) {
+      case "meet-greet":
+        return faHandshake;
       case "group-walk":
         return faUser;
       case "solo-walk":
@@ -456,8 +504,27 @@ export default function BookingsPage() {
                 Choose Your Services
               </h2>
 
+              {/* First Time Booking Notice */}
+              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-start space-x-3">
+                  <FontAwesomeIcon icon={faHandshake} className="text-primary text-xl mt-1" />
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1">First Time Booking?</h3>
+                    <p className="text-sm text-gray-700">
+                      If this is your first time booking with us, please select the <span className="font-semibold">Meet & Greet</span> service.
+                      This complimentary 30-minute session helps us get to know you and your pet(s) to ensure the best care possible.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <div className="grid md:grid-cols-3 gap-6 mb-8">
                 {[
+                  {
+                    type: "meet-greet",
+                    title: "Meet & Greet",
+                    desc: "Complimentary first meeting (for new customers)",
+                  },
                   {
                     type: "group-walk",
                     title: "Group Walk",
@@ -512,6 +579,18 @@ export default function BookingsPage() {
                   Duration & Pricing
                 </h3>
                 <div className="grid cursor-pointer text-black md:grid-cols-2 gap-4">
+                  {serviceType === "meet-greet" && (
+                    <div className="p-4 rounded-lg border-2 border-primary bg-blue-50">
+                      <div className="flex justify-between items-center">
+                        <span className="font-medium">30 minutes</span>
+                        <span className="text-primary font-bold">FREE</span>
+                      </div>
+                      <p className="text-xs text-gray-600 mt-2">
+                        Complimentary meet and greet session
+                      </p>
+                    </div>
+                  )}
+
                   {serviceType === "group-walk" &&
                     Object.entries(servicePricing["group-walk"]).map(
                       ([dur, price]) => (
@@ -872,7 +951,10 @@ export default function BookingsPage() {
                         </div>
                         <div className="mt-4">
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Special Needs/Instructions
+                            Medical & Behavioral Information
+                            {serviceType === "meet-greet" && (
+                              <span className="text-red-600 ml-1">*</span>
+                            )}
                           </label>
                           <textarea
                             value={pet.specialNeeds}
@@ -880,9 +962,13 @@ export default function BookingsPage() {
                               updatePet(index, "specialNeeds", e.target.value)
                             }
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                            rows={3}
-                            placeholder="Any special needs, medications, or instructions..."
+                            rows={4}
+                            placeholder="Please provide details about any medical conditions, medications, allergies, behavioral traits, anxiety issues, or special instructions..."
+                            required={serviceType === "meet-greet"}
                           />
+                          <p className="text-xs text-gray-500 mt-1">
+                            Include any medical issues, behavioral concerns, or special needs
+                          </p>
                         </div>
                       </div>
                     ))}

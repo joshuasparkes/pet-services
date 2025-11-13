@@ -170,9 +170,33 @@ export default function AdminDashboard() {
         });
       }
 
-      // Send confirmation email (in a real app, this would trigger a cloud function)
-      if (status === 'confirmed') {
-        console.log('Send confirmation email to user');
+      // Send email notification to customer and CC admin
+      const user = users.find(u => u.id === booking.userId);
+      if (user) {
+        try {
+          const emailType = status === 'confirmed' ? 'booking_confirmed' : 'booking_rejected';
+          await fetch('/api/send-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              type: emailType,
+              data: {
+                customerName: `${user.firstName} ${user.lastName}`,
+                customerEmail: user.email,
+                serviceType: booking.serviceType.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                date: booking.date.toLocaleDateString('en-GB'),
+                startTime: booking.startTime,
+                endTime: booking.endTime,
+                price: booking.price,
+              },
+            }),
+          });
+        } catch (emailError) {
+          console.error('Failed to send email notification:', emailError);
+          // Don't block the status update if email fails
+        }
       }
       
       setSelectedBooking(null);

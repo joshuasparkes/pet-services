@@ -35,7 +35,7 @@ export interface BookingRequest {
   id: string;
   userId: string;
   petIds: string[];
-  serviceType: 'group-walk' | 'solo-walk' | 'drop-in' | 'day-care' | 'overnight';
+  serviceType: 'meet-greet' | 'group-walk' | 'solo-walk' | 'drop-in' | 'day-care' | 'overnight';
   date: Date;
   startTime: string;
   endTime: string;
@@ -58,6 +58,9 @@ export interface TimeSlot {
 }
 
 export interface ServicePricing {
+  'meet-greet': {
+    '30min': number;
+  };
   'group-walk': {
     '30min': number;
     '60min': number;
