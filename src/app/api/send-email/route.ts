@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
                   </div>
 
                   <p style="text-align: center; margin-top: 30px;">
-                    <a href="https://bournvillepetservices.co.uk/admin" class="button">View in Admin Dashboard</a>
+                    <a href="https://bournvillepetcare.co.uk/admin" class="button">View in Admin Dashboard</a>
                   </p>
 
                   <p style="margin-top: 30px; color: #666; font-size: 14px;">
