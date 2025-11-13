@@ -277,9 +277,8 @@ export default function Home() {
                 Dog Walking
               </h3>
               <p className="text-gray-600 mb-6">
-                Regular walks tailored to your dog&apos;s energy level and
-                needs. Individual or group walks available with real-time
-                updates and photos.
+                Group or solo walks tailored to your dog&apos;s needs.
+                Choose between sociable group walks or one-on-one attention.
               </p>
               <ul className="text-left text-gray-600 space-y-2">
                 <li className="flex items-center space-x-2">
@@ -287,7 +286,14 @@ export default function Home() {
                     icon={faCheckCircle}
                     className="text-secondary text-sm"
                   />
-                  <span>30-60 minute walks</span>
+                  <span>Group walks: £13-£17</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-secondary text-sm"
+                  />
+                  <span>Solo walks: £15-£22</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
@@ -295,13 +301,6 @@ export default function Home() {
                     className="text-secondary text-sm"
                   />
                   <span>Photo updates</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon
-                    icon={faCheckCircle}
-                    className="text-secondary text-sm"
-                  />
-                  <span>Flexible scheduling</span>
                 </li>
               </ul>
             </div>
@@ -314,12 +313,11 @@ export default function Home() {
                 />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Pet Sitting
+                Day Care & Overnight
               </h3>
               <p className="text-gray-600 mb-6">
-                In-home pet care while you&apos;re away. Your pets stay
-                comfortable in their familiar environment with personalized
-                attention.
+                Full day care or overnight stays in your home. Your pets stay
+                comfortable while receiving personalized attention.
               </p>
               <ul className="text-left text-gray-600 space-y-2">
                 <li className="flex items-center space-x-2">
@@ -327,21 +325,21 @@ export default function Home() {
                     icon={faCheckCircle}
                     className="text-secondary text-sm"
                   />
-                  <span>In-home care</span>
+                  <span>Day care (8am-4pm): £40</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
                     className="text-secondary text-sm"
                   />
-                  <span>Feeding & medication</span>
+                  <span>Overnight: £45-£50</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
                     className="text-secondary text-sm"
                   />
-                  <span>Daily updates</span>
+                  <span>In-home comfort</span>
                 </li>
               </ul>
             </div>
@@ -354,7 +352,7 @@ export default function Home() {
                 />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Home Visits
+                Drop-in Visits
               </h3>
               <p className="text-gray-600 mb-6">
                 Quick check-ins for feeding, medication, and companionship.
@@ -366,14 +364,14 @@ export default function Home() {
                     icon={faCheckCircle}
                     className="text-secondary text-sm"
                   />
-                  <span>30-minute visits</span>
+                  <span>15-minute visits: £10</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
                     icon={faCheckCircle}
                     className="text-secondary text-sm"
                   />
-                  <span>Feeding & water</span>
+                  <span>Feeding & medication</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FontAwesomeIcon
@@ -401,210 +399,14 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Dog Walking Pricing */}
-            <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-              <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FontAwesomeIcon
-                    icon={faDog}
-                    className="text-white text-2xl"
-                  />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  Dog Walking
-                </h3>
-                <p className="text-gray-600">
-                  Professional walks tailored to your dog
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="font-medium text-gray-900">30 Minutes</span>
-                  <span className="text-2xl font-bold text-primary">£15</span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="font-medium text-gray-900">1 Hour</span>
-                  <span className="text-2xl font-bold text-primary">£25</span>
-                </div>
-              </div>
-
-              <ul className="mt-6 space-y-3 text-sm text-gray-600">
-                <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon
-                    icon={faCheckCircle}
-                    className="text-secondary"
-                  />
-                  <span>Individual or group walks</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon
-                    icon={faCheckCircle}
-                    className="text-secondary"
-                  />
-                  <span>Photo updates during walk</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon
-                    icon={faCheckCircle}
-                    className="text-secondary"
-                  />
-                  <span>Flexible scheduling</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon
-                    icon={faCheckCircle}
-                    className="text-secondary"
-                  />
-                  <span>Exercise tailored to your dog</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Pet Sitting Pricing */}
-            <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100 relative">
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <span className="bg-primary text-white px-4 py-1 rounded-full text-sm font-medium">
-                  Most Popular
-                </span>
-              </div>
-
-              <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FontAwesomeIcon
-                    icon={faHome}
-                    className="text-white text-2xl"
-                  />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  Pet Sitting
-                </h3>
-                <p className="text-gray-600">In-home care while you're away</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="font-medium text-gray-900">
-                    Half Day (4hrs)
-                  </span>
-                  <span className="text-2xl font-bold text-secondary">£40</span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="font-medium text-gray-900">
-                    Full Day (8hrs)
-                  </span>
-                  <span className="text-2xl font-bold text-secondary">£70</span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="font-medium text-gray-900">
-                    Overnight (12hrs)
-                  </span>
-                  <span className="text-2xl font-bold text-secondary">£90</span>
-                </div>
-              </div>
-
-              <ul className="mt-6 space-y-3 text-sm text-gray-600">
-                <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon
-                    icon={faCheckCircle}
-                    className="text-secondary"
-                  />
-                  <span>Feeding & medication</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon
-                    icon={faCheckCircle}
-                    className="text-secondary"
-                  />
-                  <span>Daily updates & photos</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon
-                    icon={faCheckCircle}
-                    className="text-secondary"
-                  />
-                  <span>Playtime & companionship</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon
-                    icon={faCheckCircle}
-                    className="text-secondary"
-                  />
-                  <span>Home security presence</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Home Visits Pricing */}
-            <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-              <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-tertiary rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FontAwesomeIcon
-                    icon={faCamera}
-                    className="text-white text-2xl"
-                  />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  Home Visits
-                </h3>
-                <p className="text-gray-600">Quick check-ins and care</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="font-medium text-gray-900">30 Minutes</span>
-                  <span className="text-2xl font-bold text-gray-900">
-                    £20
-                  </span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                  <span className="font-medium text-gray-900">1 Hour</span>
-                  <span className="text-2xl font-bold text-gray-900">
-                    £35
-                  </span>
-                </div>
-              </div>
-
-              <ul className="mt-6 space-y-3 text-sm text-gray-600">
-                <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon
-                    icon={faCheckCircle}
-                    className="text-secondary"
-                  />
-                  <span>Feeding & fresh water</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon
-                    icon={faCheckCircle}
-                    className="text-secondary"
-                  />
-                  <span>Medication administration</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon
-                    icon={faCheckCircle}
-                    className="text-secondary"
-                  />
-                  <span>Play & attention</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <FontAwesomeIcon
-                    icon={faCheckCircle}
-                    className="text-secondary"
-                  />
-                  <span>Litter tray cleaning</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+          
 
           <div className="mt-12 text-center">
             <div className="bg-primary-50 rounded-2xl p-8 max-w-4xl mx-auto">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
                 Payment Information
               </h3>
-              <div className="grid md:grid-cols-2 gap-8 text-left">
+              <div className="grid md:grid-cols-2 gap-8 text-center">
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-3">
                     💳 Payment Methods
@@ -922,10 +724,10 @@ export default function Home() {
             <div>
               <h3 className="text-lg font-semibold mb-4">Services</h3>
               <ul className="space-y-2 text-gray-600">
-                <li>Dog Walking</li>
-                <li>Pet Sitting</li>
-                <li>Home Visits</li>
-                <li>Emergency Care</li>
+                <li>Group & Solo Walks</li>
+                <li>Drop-in Visits</li>
+                <li>Day Care</li>
+                <li>Overnight Stays</li>
               </ul>
             </div>
             <div>

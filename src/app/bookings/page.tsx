@@ -31,18 +31,22 @@ import type {
 } from "@/types/booking";
 
 const servicePricing: ServicePricing = {
-  "dog-walking": {
+  "group-walk": {
+    "30min": 13,
+    "60min": 17,
+  },
+  "solo-walk": {
     "30min": 15,
-    "60min": 25,
+    "60min": 22,
   },
-  "pet-sitting": {
-    "half-day": 40,
-    "full-day": 70,
-    overnight: 90,
+  "drop-in": {
+    "15min": 10,
   },
-  "home-visit": {
-    "30min": 20,
-    "60min": 35,
+  "day-care": {
+    "8hrs": 40,
+  },
+  "overnight": {
+    "standard": 45,
   },
 };
 
@@ -56,8 +60,8 @@ export default function BookingsPage() {
 
   // Form state
   const [serviceType, setServiceType] = useState<
-    "dog-walking" | "pet-sitting" | "home-visit"
-  >("dog-walking");
+    "group-walk" | "solo-walk" | "drop-in" | "day-care" | "overnight"
+  >("group-walk");
   const [duration, setDuration] = useState("30min");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
@@ -346,35 +350,42 @@ export default function BookingsPage() {
 
   const getDurationMinutes = (duration: string) => {
     const durationMap: { [key: string]: number } = {
+      "15min": 15,
       "30min": 30,
       "60min": 60,
-      "half-day": 240,
-      "full-day": 480,
-      overnight: 720,
+      "8hrs": 480,
+      "standard": 720,
     };
     return durationMap[duration] || 30;
   };
 
   const calculatePrice = () => {
-    if (serviceType === "dog-walking") {
-      return servicePricing["dog-walking"][duration as "30min" | "60min"];
-    } else if (serviceType === "pet-sitting") {
-      return servicePricing["pet-sitting"][
-        duration as "half-day" | "full-day" | "overnight"
-      ];
-    } else {
-      return servicePricing["home-visit"][duration as "30min" | "60min"];
+    if (serviceType === "group-walk") {
+      return servicePricing["group-walk"][duration as "30min" | "60min"];
+    } else if (serviceType === "solo-walk") {
+      return servicePricing["solo-walk"][duration as "30min" | "60min"];
+    } else if (serviceType === "drop-in") {
+      return servicePricing["drop-in"]["15min"];
+    } else if (serviceType === "day-care") {
+      return servicePricing["day-care"]["8hrs"];
+    } else if (serviceType === "overnight") {
+      return servicePricing["overnight"]["standard"];
     }
+    return 0;
   };
 
   const getServiceIcon = (service: string) => {
     switch (service) {
-      case "dog-walking":
+      case "group-walk":
+        return faUser;
+      case "solo-walk":
         return faDog;
-      case "pet-sitting":
-        return faHome;
-      case "home-visit":
+      case "drop-in":
         return faCamera;
+      case "day-care":
+        return faHome;
+      case "overnight":
+        return faClock;
       default:
         return faPaw;
     }
@@ -448,19 +459,29 @@ export default function BookingsPage() {
               <div className="grid md:grid-cols-3 gap-6 mb-8">
                 {[
                   {
-                    type: "dog-walking",
-                    title: "Dog Walking",
-                    desc: "Professional walks for your dog",
+                    type: "group-walk",
+                    title: "Group Walk",
+                    desc: "Sociable walks with other dogs",
                   },
                   {
-                    type: "pet-sitting",
-                    title: "Pet Sitting",
-                    desc: "In-home pet care while you're away",
+                    type: "solo-walk",
+                    title: "Solo Walk",
+                    desc: "One-on-one attention for your dog",
                   },
                   {
-                    type: "home-visit",
-                    title: "Home Visits",
-                    desc: "Quick check-ins and care",
+                    type: "drop-in",
+                    title: "Drop-in Visit",
+                    desc: "Quick 15-minute check-in",
+                  },
+                  {
+                    type: "day-care",
+                    title: "Day Care",
+                    desc: "8am-4pm full day care",
+                  },
+                  {
+                    type: "overnight",
+                    title: "Overnight Stay",
+                    desc: "Overnight care in your home",
                   },
                 ].map((service) => (
                   <button
@@ -491,8 +512,8 @@ export default function BookingsPage() {
                   Duration & Pricing
                 </h3>
                 <div className="grid cursor-pointer text-black md:grid-cols-2 gap-4">
-                  {serviceType === "dog-walking" &&
-                    Object.entries(servicePricing["dog-walking"]).map(
+                  {serviceType === "group-walk" &&
+                    Object.entries(servicePricing["group-walk"]).map(
                       ([dur, price]) => (
                         <button
                           key={dur}
@@ -515,36 +536,8 @@ export default function BookingsPage() {
                       ),
                     )}
 
-                  {serviceType === "pet-sitting" &&
-                    Object.entries(servicePricing["pet-sitting"]).map(
-                      ([dur, price]) => (
-                        <button
-                          key={dur}
-                          onClick={() => setDuration(dur)}
-                          className={`p-4 cursor-pointer rounded-lg border-2 text-left ${
-                            duration === dur
-                              ? "border-primary bg-blue-50"
-                              : "border-gray-200"
-                          }`}
-                        >
-                          <div className="flex justify-between items-center">
-                            <span className="font-medium">
-                              {dur === "half-day"
-                                ? "Half Day (4hrs)"
-                                : dur === "full-day"
-                                  ? "Full Day (8hrs)"
-                                  : "Overnight (12hrs)"}
-                            </span>
-                            <span className="text-primary font-bold">
-                              £{price}
-                            </span>
-                          </div>
-                        </button>
-                      ),
-                    )}
-
-                  {serviceType === "home-visit" &&
-                    Object.entries(servicePricing["home-visit"]).map(
+                  {serviceType === "solo-walk" &&
+                    Object.entries(servicePricing["solo-walk"]).map(
                       ([dur, price]) => (
                         <button
                           key={dur}
@@ -563,6 +556,73 @@ export default function BookingsPage() {
                               £{price}
                             </span>
                           </div>
+                        </button>
+                      ),
+                    )}
+
+                  {serviceType === "drop-in" &&
+                    Object.entries(servicePricing["drop-in"]).map(
+                      ([dur, price]) => (
+                        <button
+                          key={dur}
+                          onClick={() => setDuration(dur)}
+                          className={`p-4 cursor-pointer rounded-lg border-2 text-left ${
+                            duration === dur
+                              ? "border-primary bg-blue-50"
+                              : "border-gray-200"
+                          }`}
+                        >
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium">15 minutes</span>
+                            <span className="text-primary font-bold">
+                              £{price}
+                            </span>
+                          </div>
+                        </button>
+                      ),
+                    )}
+
+                  {serviceType === "day-care" &&
+                    Object.entries(servicePricing["day-care"]).map(
+                      ([dur, price]) => (
+                        <button
+                          key={dur}
+                          onClick={() => setDuration(dur)}
+                          className={`p-4 cursor-pointer rounded-lg border-2 text-left ${
+                            duration === dur
+                              ? "border-primary bg-blue-50"
+                              : "border-gray-200"
+                          }`}
+                        >
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium">8am-4pm (8 hours)</span>
+                            <span className="text-primary font-bold">
+                              £{price}
+                            </span>
+                          </div>
+                        </button>
+                      ),
+                    )}
+
+                  {serviceType === "overnight" &&
+                    Object.entries(servicePricing["overnight"]).map(
+                      ([dur, price]) => (
+                        <button
+                          key={dur}
+                          onClick={() => setDuration(dur)}
+                          className={`p-4 cursor-pointer rounded-lg border-2 text-left ${
+                            duration === dur
+                              ? "border-primary bg-blue-50"
+                              : "border-gray-200"
+                          }`}
+                        >
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium">Overnight Stay</span>
+                            <span className="text-primary font-bold">
+                              £{price}-£50
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">Final price depends on dog's needs</p>
                         </button>
                       ),
                     )}

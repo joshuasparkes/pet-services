@@ -35,7 +35,7 @@ export interface BookingRequest {
   id: string;
   userId: string;
   petIds: string[];
-  serviceType: 'dog-walking' | 'pet-sitting' | 'home-visit';
+  serviceType: 'group-walk' | 'solo-walk' | 'drop-in' | 'day-care' | 'overnight';
   date: Date;
   startTime: string;
   endTime: string;
@@ -58,17 +58,21 @@ export interface TimeSlot {
 }
 
 export interface ServicePricing {
-  'dog-walking': {
+  'group-walk': {
     '30min': number;
     '60min': number;
   };
-  'pet-sitting': {
-    'half-day': number;
-    'full-day': number;
-    'overnight': number;
-  };
-  'home-visit': {
+  'solo-walk': {
     '30min': number;
     '60min': number;
+  };
+  'drop-in': {
+    '15min': number;
+  };
+  'day-care': {
+    '8hrs': number;
+  };
+  'overnight': {
+    'standard': number;
   };
 }
