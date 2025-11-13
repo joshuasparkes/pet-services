@@ -1189,8 +1189,14 @@ export default function BookingsPage() {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
+                  onClick={() => router.push("/dashboard")}
+                  className="bg-primary cursor-pointer text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors"
+                >
+                  Go to My Dashboard
+                </button>
+                <button
                   onClick={() => router.push("/")}
-                  className="bg-primary cursor-pointer text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors cursor-pointer"
+                  className="border border-primary text-primary px-8 py-3 rounded-lg hover:bg-blue-50 transition-colors cursor-pointer"
                 >
                   Back to Home
                 </button>
@@ -1201,7 +1207,7 @@ export default function BookingsPage() {
                     setSelectedTime("");
                     setSpecialInstructions("");
                   }}
-                  className="border border-primary text-primary px-8 py-3 rounded-lg hover:bg-blue-50 transition-colors cursor-pointer"
+                  className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   Book Another Service
                 </button>
