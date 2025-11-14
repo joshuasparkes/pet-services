@@ -453,7 +453,7 @@ export default function BookingsPage() {
                 <h1 className="text-2xl font-bold text-gray-900">
                   Book Pet Care
                 </h1>
-                <p className="text-gray-600">Bournville Pet Services</p>
+                <p className="text-gray-600">Bournville Pet Care</p>
               </div>
             </div>
             <button

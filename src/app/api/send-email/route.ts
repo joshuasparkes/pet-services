@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
         emailOptions = {
           from: process.env.SMTP_USER,
           to: process.env.ADMIN_EMAIL,
-          subject: '🐾 New Booking Request - Bournville Pet Services',
+          subject: '🐾 New Booking Request - Bournville Pet Care',
           html: `
             <!DOCTYPE html>
             <html>
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
                   </p>
                 </div>
                 <div class="footer">
-                  <p>Bournville Pet Services<br/>
+                  <p>Bournville Pet Care<br/>
                   <a href="https://bournvillepetservices.co.uk" style="color: #667eea;">bournvillepetservices.co.uk</a></p>
                 </div>
               </div>
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
           from: process.env.SMTP_USER,
           to: data.customerEmail,
           cc: process.env.ADMIN_EMAIL,
-          subject: '✅ Booking Confirmed - Bournville Pet Services',
+          subject: '✅ Booking Confirmed - Bournville Pet Care',
           html: `
             <!DOCTYPE html>
             <html>
@@ -131,10 +131,10 @@ export async function POST(request: NextRequest) {
 
                   <p style="margin-top: 20px;">Warm regards,<br>
                   <strong>Isabel Sparkes</strong><br>
-                  Bournville Pet Services</p>
+                  Bournville Pet Care</p>
                 </div>
                 <div class="footer">
-                  <p>Bournville Pet Services<br/>
+                  <p>Bournville Pet Care<br/>
                   07590 566769 | isabel.sparkes@hotmail.com<br/>
                   <a href="https://bournvillepetservices.co.uk" style="color: #667eea;">bournvillepetservices.co.uk</a></p>
                 </div>
@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
           from: process.env.SMTP_USER,
           to: data.customerEmail,
           cc: process.env.ADMIN_EMAIL,
-          subject: 'Booking Update - Bournville Pet Services',
+          subject: 'Booking Update - Bournville Pet Care',
           html: `
             <!DOCTYPE html>
             <html>
@@ -200,14 +200,14 @@ export async function POST(request: NextRequest) {
                     <p style="margin: 5px 0;">📧 <strong>Email:</strong> isabel.sparkes@hotmail.com</p>
                   </div>
 
-                  <p style="margin-top: 25px;">I really appreciate your interest in Bournville Pet Services, and I hope we can arrange something soon!</p>
+                  <p style="margin-top: 25px;">I really appreciate your interest in Bournville Pet Care, and I hope we can arrange something soon!</p>
 
                   <p style="margin-top: 20px;">Best regards,<br>
                   <strong>Isabel Sparkes</strong><br>
-                  Bournville Pet Services</p>
+                  Bournville Pet Care</p>
                 </div>
                 <div class="footer">
-                  <p>Bournville Pet Services<br/>
+                  <p>Bournville Pet Care<br/>
                   07590 566769 | isabel.sparkes@hotmail.com<br/>
                   <a href="https://bournvillepetservices.co.uk" style="color: #667eea;">bournvillepetservices.co.uk</a></p>
                 </div>

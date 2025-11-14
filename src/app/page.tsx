@@ -65,13 +65,13 @@ export default function Home() {
             <div className="flex items-center space-x-3">
               <Image
                 src="/doglogo.jpg"
-                alt="Bournville Pet Services Logo"
+                alt="Bournville Pet Care Logo"
                 width={40}
                 height={40}
                 className="rounded-full object-cover"
               />
               <span className="text-xl font-bold text-gray-900">
-                Bournville Pet Services
+                Bournville Pet Care
               </span>
             </div>
             <div className="hidden md:flex space-x-8">
@@ -707,13 +707,13 @@ export default function Home() {
               <div className="flex items-center space-x-3 mb-4">
                 <Image
                   src="/doglogo.jpg"
-                  alt="Bournville Pet Services Logo"
+                  alt="Bournville Pet Care Logo"
                   width={32}
                   height={32}
                   className="rounded-full object-cover"
                 />
                 <span className="text-xl font-bold">
-                  Bournville Pet Services
+                  Bournville Pet Care
                 </span>
               </div>
               <p className="text-gray-600 mb-4">
@@ -750,7 +750,7 @@ export default function Home() {
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-600">
             <p>
-              &copy; <a href="/admin" className="hover:text-gray-400 transition-colors">2024</a> Bournville Pet Services. All rights reserved.
+              &copy; <a href="/admin" className="hover:text-gray-400 transition-colors">2024</a> Bournville Pet Care. All rights reserved.
             </p>
           </div>
         </div>

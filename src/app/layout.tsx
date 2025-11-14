@@ -9,7 +9,7 @@ const raleway = Raleway({
 });
 
 export const metadata: Metadata = {
-  title: "Bournville Pet Services | Professional Dog Walking & Pet Care in Bournville, Birmingham",
+  title: "Bournville Pet Care | Professional Dog Walking & Pet Care in Bournville, Birmingham",
   description: "Trusted pet care services in Bournville and surrounding Birmingham areas. Professional dog walking, pet sitting, and home visits by Isabel Sparkes. Fully insured and DBS checked. Book your pet care today!",
   icons: {
     icon: '/doglogo.jpg',
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Isabel Sparkes" }],
   creator: "Isabel Sparkes",
-  publisher: "Bournville Pet Services",
+  publisher: "Bournville Pet Care",
   robots: {
     index: true,
     follow: true,
@@ -46,21 +46,21 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_GB',
     url: 'https://bournvillepetservices.co.uk',
-    title: 'Bournville Pet Services | Professional Dog Walking & Pet Care',
+    title: 'Bournville Pet Care | Professional Dog Walking & Pet Care',
     description: 'Trusted pet care services in Bournville and surrounding Birmingham areas. Professional dog walking, pet sitting, and home visits.',
-    siteName: 'Bournville Pet Services',
+    siteName: 'Bournville Pet Care',
     images: [
       {
         url: '/doglogo.jpg',
         width: 800,
         height: 800,
-        alt: 'Bournville Pet Services - Professional Pet Care',
+        alt: 'Bournville Pet Care - Professional Pet Care',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Bournville Pet Services | Professional Dog Walking & Pet Care',
+    title: 'Bournville Pet Care | Professional Dog Walking & Pet Care',
     description: 'Trusted pet care services in Bournville and surrounding Birmingham areas.',
     images: ['/doglogo.jpg'],
   },

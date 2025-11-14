@@ -269,7 +269,7 @@ export default function AdminDashboard() {
               <FontAwesomeIcon icon={faDashboard} className="text-white text-2xl" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Access</h1>
-            <p className="text-gray-600">Bournville Pet Services</p>
+            <p className="text-gray-600">Bournville Pet Care</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
@@ -322,7 +322,7 @@ export default function AdminDashboard() {
               </div>
               <div className="min-w-0">
                 <h1 className="text-lg sm:text-2xl font-bold text-gray-900 truncate">Admin</h1>
-                <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">Bournville Pet Services</p>
+                <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">Bournville Pet Care</p>
               </div>
             </div>
             <button
