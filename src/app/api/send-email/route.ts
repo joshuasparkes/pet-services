@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       case 'booking_request':
         emailOptions = {
           from: process.env.SMTP_USER,
-          to: process.env.ADMIN_EMAIL,
+          to: 'isabel.sparkes@hotmail.com, joshsparkes6@gmail.com',
           subject: '🐾 New Booking Request - Bournville Pet Care',
           html: `
             <!DOCTYPE html>
