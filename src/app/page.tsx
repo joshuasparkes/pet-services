@@ -678,7 +678,7 @@ export default function Home() {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             Ready to Give Your Pet the Best Care?
           </h2>
-          <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto text-white">
             Book a meet & greet today and see why pet parents in Bournville
             trust us with their beloved companions.
           </p>
