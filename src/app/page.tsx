@@ -62,15 +62,15 @@ export default function Home() {
       <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-amber-100 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-3">
               <Image
                 src="/doglogo.jpg"
                 alt="Bournville Pet Care Logo"
-                width={40}
-                height={40}
-                className="rounded-full object-cover"
+                width={48}
+                height={48}
+                className="rounded-full object-cover w-12 h-12 sm:w-10 sm:h-10"
               />
-              <span className="text-xl font-bold text-gray-900">
+              <span className="text-base sm:text-xl font-bold text-gray-900">
                 Bournville Pet Care
               </span>
             </div>
