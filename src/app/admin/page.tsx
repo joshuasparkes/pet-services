@@ -149,6 +149,18 @@ export default function AdminDashboard() {
     };
   }, [bookings]);
 
+  const handleApproveBooking = (bookingId: string) => {
+    if (window.confirm('Are you sure you want to APPROVE this booking? This means you are accepting the booking request and committing to provide the service.')) {
+      updateBookingStatus(bookingId, 'confirmed');
+    }
+  };
+
+  const handleCompleteBooking = (bookingId: string) => {
+    if (window.confirm('Are you sure you want to mark this booking as COMPLETE? Only click this if the appointment has already happened and the service was successfully completed.')) {
+      updateBookingStatus(bookingId, 'completed');
+    }
+  };
+
   const updateBookingStatus = async (bookingId: string, status: BookingRequest['status'], adminNotes?: string) => {
     setIsLoading(true);
     try {
@@ -459,7 +471,7 @@ export default function AdminDashboard() {
                       {/* Action Buttons - Touch-friendly on mobile */}
                       <div className="grid grid-cols-2 gap-2">
                         <button
-                          onClick={() => updateBookingStatus(booking.id, 'confirmed')}
+                          onClick={() => handleApproveBooking(booking.id)}
                           className="flex items-center justify-center space-x-1.5 px-3 py-2.5 sm:py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 active:bg-green-200 transition-colors cursor-pointer text-xs sm:text-sm font-medium"
                         >
                           <FontAwesomeIcon icon={faCheck} className="text-sm sm:text-base" />
@@ -593,7 +605,7 @@ export default function AdminDashboard() {
                     {booking.status === 'pending' && (
                       <>
                         <button
-                          onClick={() => updateBookingStatus(booking.id, 'confirmed')}
+                          onClick={() => handleApproveBooking(booking.id)}
                           className="flex items-center justify-center space-x-1 px-3 py-2.5 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 active:bg-green-200 transition-colors cursor-pointer text-xs font-medium"
                         >
                           <FontAwesomeIcon icon={faCheck} className="text-sm" />
@@ -610,7 +622,7 @@ export default function AdminDashboard() {
                     )}
                     {booking.status === 'confirmed' && (
                       <button
-                        onClick={() => updateBookingStatus(booking.id, 'completed')}
+                        onClick={() => handleCompleteBooking(booking.id)}
                         className="col-span-2 flex items-center justify-center space-x-1 px-3 py-2.5 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 active:bg-green-200 transition-colors cursor-pointer text-xs font-medium"
                       >
                         <FontAwesomeIcon icon={faCheckCircle} className="text-sm" />
@@ -679,7 +691,7 @@ export default function AdminDashboard() {
                           {booking.status === 'pending' && (
                             <>
                               <button
-                                onClick={() => updateBookingStatus(booking.id, 'confirmed')}
+                                onClick={() => handleApproveBooking(booking.id)}
                                 className="flex items-center space-x-1 px-3 py-1.5 bg-green-50 text-green-700 rounded-md hover:bg-green-100 transition-colors cursor-pointer"
                               >
                                 <FontAwesomeIcon icon={faCheck} className="text-sm" />
@@ -696,7 +708,7 @@ export default function AdminDashboard() {
                           )}
                           {booking.status === 'confirmed' && (
                             <button
-                              onClick={() => updateBookingStatus(booking.id, 'completed')}
+                              onClick={() => handleCompleteBooking(booking.id)}
                               className="flex items-center space-x-1 px-3 py-1.5 bg-green-50 text-green-700 rounded-md hover:bg-green-100 transition-colors cursor-pointer"
                             >
                               <FontAwesomeIcon icon={faCheckCircle} className="text-sm" />
@@ -903,7 +915,7 @@ export default function AdminDashboard() {
                               )}
                             </button>
                             <button
-                              onClick={() => updateBookingStatus(booking.id, 'completed')}
+                              onClick={() => handleCompleteBooking(booking.id)}
                               className="flex items-center justify-center space-x-1 px-2 sm:px-3 py-2 sm:py-1.5 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 active:bg-green-200 transition-colors cursor-pointer text-xs sm:text-sm"
                             >
                               <FontAwesomeIcon icon={faCheckCircle} className="text-xs sm:text-sm" />
@@ -1195,7 +1207,7 @@ export default function AdminDashboard() {
               {selectedBooking.status === 'pending' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-gray-200">
                   <button
-                    onClick={() => updateBookingStatus(selectedBooking.id, 'confirmed')}
+                    onClick={() => handleApproveBooking(selectedBooking.id)}
                     disabled={isLoading}
                     className="bg-green-600 text-white px-4 py-3 sm:py-2 rounded-lg hover:bg-green-700 active:bg-green-800 transition-colors disabled:opacity-50 text-sm sm:text-base"
                   >
@@ -1215,7 +1227,7 @@ export default function AdminDashboard() {
               {selectedBooking.status === 'confirmed' && (
                 <div className="pt-3 sm:pt-4 border-t border-gray-200">
                   <button
-                    onClick={() => updateBookingStatus(selectedBooking.id, 'completed')}
+                    onClick={() => handleCompleteBooking(selectedBooking.id)}
                     disabled={isLoading}
                     className="w-full bg-primary text-white px-4 py-3 sm:py-2 rounded-lg hover:bg-primary-dark active:bg-primary transition-colors disabled:opacity-50 text-sm sm:text-base"
                   >
