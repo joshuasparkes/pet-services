@@ -170,34 +170,34 @@ export default function AdminDashboard() {
         });
       }
 
-      // Send email notification to customer and CC admin
-      const user = users.find(u => u.id === booking.userId);
-      if (user) {
-        try {
-          const emailType = status === 'confirmed' ? 'booking_confirmed' : 'booking_rejected';
-          await fetch('/api/send-email', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              type: emailType,
-              data: {
-                customerName: `${user.firstName} ${user.lastName}`,
-                customerEmail: user.email,
-                serviceType: booking.serviceType.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
-                date: booking.date.toLocaleDateString('en-GB'),
-                startTime: booking.startTime,
-                endTime: booking.endTime,
-                price: booking.price,
-              },
-            }),
-          });
-        } catch (emailError) {
-          console.error('Failed to send email notification:', emailError);
-          // Don't block the status update if email fails
-        }
-      }
+      // TEMPORARILY DISABLED: Send email notification to customer and CC admin
+      // const user = users.find(u => u.id === booking.userId);
+      // if (user) {
+      //   try {
+      //     const emailType = status === 'confirmed' ? 'booking_confirmed' : 'booking_rejected';
+      //     await fetch('/api/send-email', {
+      //       method: 'POST',
+      //       headers: {
+      //         'Content-Type': 'application/json',
+      //       },
+      //       body: JSON.stringify({
+      //         type: emailType,
+      //         data: {
+      //           customerName: `${user.firstName} ${user.lastName}`,
+      //           customerEmail: user.email,
+      //           serviceType: booking.serviceType.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      //           date: booking.date.toLocaleDateString('en-GB'),
+      //           startTime: booking.startTime,
+      //           endTime: booking.endTime,
+      //           price: booking.price,
+      //         },
+      //       }),
+      //     });
+      //   } catch (emailError) {
+      //     console.error('Failed to send email notification:', emailError);
+      //     // Don't block the status update if email fails
+      //   }
+      // }
       
       setSelectedBooking(null);
     } catch (error) {
@@ -313,219 +313,217 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="bg-white shadow-sm border-b sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-                <FontAwesomeIcon icon={faDashboard} className="text-white" />
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                <FontAwesomeIcon icon={faDashboard} className="text-white text-sm sm:text-base" />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-                <p className="text-gray-600">Bournville Pet Services</p>
+              <div className="min-w-0">
+                <h1 className="text-lg sm:text-2xl font-bold text-gray-900 truncate">Admin</h1>
+                <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">Bournville Pet Services</p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="text-right">
-                <p className="text-sm text-gray-600">Welcome back, Isabel</p>
-                <p className="text-xs text-gray-700">{new Date().toLocaleDateString('en-GB')}</p>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 transition-colors cursor-pointer"
-                title="Logout"
-              >
-                Logout
-              </button>
-            </div>
+            <button
+              onClick={handleLogout}
+              className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 hover:text-red-600 transition-colors cursor-pointer whitespace-nowrap"
+              title="Logout"
+            >
+              Logout
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Tabs */}
-        <div className="flex cursor-pointer space-x-1 bg-gray-100 rounded-lg p-1 mb-8">
-          {[
-            { id: 'dashboard', label: 'Dashboard', icon: faDashboard },
-            { id: 'calendar', label: 'Calendar', icon: faCalendarAlt },
-            { id: 'bookings', label: 'Bookings', icon: faClipboardList },
-            { id: 'customers', label: 'Customers', icon: faUsers },
-            { id: 'activity', label: 'Activity Log', icon: faBell }
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex cursor-pointer items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === tab.id 
-                  ? 'bg-white text-gray-900 shadow-sm' 
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <FontAwesomeIcon icon={tab.icon} />
-              <span>{tab.label}</span>
-            </button>
-          ))}
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
+        {/* Tabs - Horizontal scroll on mobile */}
+        <div className="overflow-x-auto -mx-3 sm:mx-0 mb-6 sm:mb-8">
+          <div className="flex cursor-pointer space-x-1 bg-gray-100 rounded-lg p-1 min-w-max sm:min-w-0 mx-3 sm:mx-0">
+            {[
+              { id: 'dashboard', label: 'Dashboard', icon: faDashboard, shortLabel: 'Home' },
+              { id: 'calendar', label: 'Calendar', icon: faCalendarAlt, shortLabel: 'Calendar' },
+              { id: 'bookings', label: 'Bookings', icon: faClipboardList, shortLabel: 'Bookings' },
+              { id: 'customers', label: 'Customers', icon: faUsers, shortLabel: 'Customers' },
+              { id: 'activity', label: 'Activity Log', icon: faBell, shortLabel: 'Activity' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex cursor-pointer items-center justify-center space-x-1.5 sm:space-x-2 px-3 sm:px-4 py-2.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
+                  activeTab === tab.id
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <FontAwesomeIcon icon={tab.icon} className="text-sm sm:text-base" />
+                <span className="hidden sm:inline">{tab.label}</span>
+                <span className="sm:hidden">{tab.shortLabel}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Dashboard Content */}
         {activeTab === 'dashboard' && (
           <div>
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Total Bookings</p>
-                    <p className="text-3xl font-bold text-gray-900">{stats.totalBookings}</p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
+              <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between">
+                  <div className="mb-2 sm:mb-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">Total Bookings</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-gray-900">{stats.totalBookings}</p>
                   </div>
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <FontAwesomeIcon icon={faCalendarAlt} className="text-primary text-xl" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Pending Requests</p>
-                    <p className="text-3xl font-bold text-orange-600">{stats.pendingRequests}</p>
-                  </div>
-                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <FontAwesomeIcon icon={faBell} className="text-orange-600 text-xl" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <FontAwesomeIcon icon={faCalendarAlt} className="text-primary text-lg sm:text-xl" />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Completed</p>
-                    <p className="text-3xl font-bold text-green-600">{stats.completedBookings}</p>
+              <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between">
+                  <div className="mb-2 sm:mb-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">Pending</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-orange-600">{stats.pendingRequests}</p>
                   </div>
-                  <div className="w-12 cursor-pointer h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <FontAwesomeIcon icon={faCheck} className="text-green-600 text-xl" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <FontAwesomeIcon icon={faBell} className="text-orange-600 text-lg sm:text-xl" />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-                    <p className="text-3xl font-bold text-green-600">£{stats.totalRevenue}</p>
+              <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between">
+                  <div className="mb-2 sm:mb-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">Completed</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-green-600">{stats.completedBookings}</p>
                   </div>
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <FontAwesomeIcon icon={faPoundSign} className="text-green-600 text-xl" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                    <FontAwesomeIcon icon={faCheck} className="text-green-600 text-lg sm:text-xl" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between">
+                  <div className="mb-2 sm:mb-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">Revenue</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-green-600">£{stats.totalRevenue}</p>
+                  </div>
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                    <FontAwesomeIcon icon={faPoundSign} className="text-green-600 text-lg sm:text-xl" />
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Recent Activity & Pending Requests */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
               {/* Pending Requests */}
               <div className="bg-white rounded-xl shadow-sm">
-                <div className="p-6 border-b border-gray-200">
-                  <h2 className="text-lg font-semibold text-gray-900">Pending Requests</h2>
+                <div className="p-4 sm:p-6 border-b border-gray-200">
+                  <h2 className="text-base sm:text-lg font-semibold text-gray-900">Pending Requests</h2>
                 </div>
-                <div className="p-6">
+                <div className="p-3 sm:p-6">
                   {bookings.filter(b => b.status === 'pending').slice(0, 5).map((booking) => (
-                    <div key={booking.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow mb-3 last:mb-0">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
-                          {/* Customer Name */}
-                          <div className="flex items-center space-x-2 mb-3">
-                            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                              <FontAwesomeIcon icon={faUser} className="text-white text-sm" />
-                            </div>
-                            <p className="font-semibold text-gray-900 text-base">{getUserName(booking.userId)}</p>
-                          </div>
+                    <div key={booking.id} className="border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow mb-3 last:mb-0">
+                      {/* Customer Name */}
+                      <div className="flex items-center space-x-2 mb-3">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                          <FontAwesomeIcon icon={faUser} className="text-white text-xs sm:text-sm" />
+                        </div>
+                        <p className="font-semibold text-gray-900 text-sm sm:text-base truncate">{getUserName(booking.userId)}</p>
+                      </div>
 
-                          {/* Service Type Badge */}
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                              <FontAwesomeIcon icon={faPaw} className="mr-1.5" />
-                              {booking.serviceType.replace('-', ' ')}
+                      {/* Service Type Badge */}
+                      <div className="mb-3">
+                        <span className="inline-flex items-center px-2.5 sm:px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          <FontAwesomeIcon icon={faPaw} className="mr-1.5" />
+                          {booking.serviceType.replace('-', ' ')}
+                        </span>
+                      </div>
+
+                      {/* Date and Time Info */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm mb-4">
+                        <div className="flex items-center text-gray-700">
+                          <FontAwesomeIcon icon={faCalendarAlt} className="mr-2 text-gray-400 flex-shrink-0" />
+                          <span className="font-medium truncate">{formatDate(booking.date)}</span>
+                        </div>
+                        <div className="flex items-center text-gray-700">
+                          <FontAwesomeIcon icon={faClock} className="mr-2 text-gray-400 flex-shrink-0" />
+                          <span className="font-medium">{booking.startTime}</span>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons - Touch-friendly on mobile */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          onClick={() => updateBookingStatus(booking.id, 'confirmed')}
+                          className="flex items-center justify-center space-x-1.5 px-3 py-2.5 sm:py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 active:bg-green-200 transition-colors cursor-pointer text-xs sm:text-sm font-medium"
+                        >
+                          <FontAwesomeIcon icon={faCheck} className="text-sm sm:text-base" />
+                          <span>Approve</span>
+                        </button>
+                        <button
+                          onClick={() => updateBookingStatus(booking.id, 'rejected')}
+                          className="flex items-center justify-center space-x-1.5 px-3 py-2.5 sm:py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 active:bg-red-200 transition-colors cursor-pointer text-xs sm:text-sm font-medium"
+                        >
+                          <FontAwesomeIcon icon={faTimes} className="text-sm sm:text-base" />
+                          <span>Reject</span>
+                        </button>
+                        <button
+                          onClick={() => setSelectedBooking(booking)}
+                          className="flex items-center justify-center space-x-1.5 px-3 py-2.5 sm:py-2 bg-blue-50 text-primary rounded-lg hover:bg-blue-100 active:bg-blue-200 transition-colors cursor-pointer text-xs sm:text-sm font-medium"
+                        >
+                          <FontAwesomeIcon icon={faEye} className="text-sm sm:text-base" />
+                          <span>View</span>
+                        </button>
+                        <button
+                          onClick={() => setSelectedChatBooking(booking)}
+                          className="relative flex items-center justify-center space-x-1.5 px-3 py-2.5 sm:py-2 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 active:bg-purple-200 transition-colors cursor-pointer text-xs sm:text-sm font-medium"
+                        >
+                          <FontAwesomeIcon icon={faComment} className="text-sm sm:text-base" />
+                          <span>Chat</span>
+                          {unreadCounts[booking.id] > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                              {unreadCounts[booking.id]}
                             </span>
-                          </div>
-
-                          {/* Date and Time Info */}
-                          <div className="grid grid-cols-2 gap-2 text-sm">
-                            <div className="flex items-center text-gray-700">
-                              <FontAwesomeIcon icon={faCalendarAlt} className="mr-2 text-gray-400" />
-                              <span className="font-medium">{formatDate(booking.date)}</span>
-                            </div>
-                            <div className="flex items-center text-gray-700">
-                              <FontAwesomeIcon icon={faClock} className="mr-2 text-gray-400" />
-                              <span className="font-medium">{booking.startTime}</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="flex flex-col gap-2">
-                          <button
-                            onClick={() => updateBookingStatus(booking.id, 'confirmed')}
-                            className="flex items-center space-x-1 px-3 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors cursor-pointer text-sm font-medium whitespace-nowrap"
-                          >
-                            <FontAwesomeIcon icon={faCheck} className="text-base" />
-                            <span>Approve</span>
-                          </button>
-                          <button
-                            onClick={() => setSelectedBooking(booking)}
-                            className="flex items-center space-x-1 px-3 py-2 bg-blue-50 text-primary rounded-lg hover:bg-blue-100 transition-colors cursor-pointer text-sm font-medium whitespace-nowrap"
-                          >
-                            <FontAwesomeIcon icon={faEye} className="text-base" />
-                            <span>View</span>
-                          </button>
-                          <button
-                            onClick={() => setSelectedChatBooking(booking)}
-                            className="relative flex items-center space-x-1 px-3 py-2 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors cursor-pointer text-sm font-medium whitespace-nowrap"
-                          >
-                            <FontAwesomeIcon icon={faComment} className="text-base" />
-                            <span>Chat</span>
-                            {unreadCounts[booking.id] > 0 && (
-                              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
-                                {unreadCounts[booking.id]}
-                              </span>
-                            )}
-                          </button>
-                          <button
-                            onClick={() => updateBookingStatus(booking.id, 'rejected')}
-                            className="flex items-center space-x-1 px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors cursor-pointer text-sm font-medium whitespace-nowrap"
-                          >
-                            <FontAwesomeIcon icon={faTimes} className="text-base" />
-                            <span>Reject</span>
-                          </button>
-                        </div>
+                          )}
+                        </button>
                       </div>
                     </div>
                   ))}
                   {bookings.filter(b => b.status === 'pending').length === 0 && (
-                    <p className="text-gray-700 text-center py-8">No pending requests</p>
+                    <p className="text-gray-700 text-center py-8 text-sm">No pending requests</p>
                   )}
                 </div>
               </div>
 
               {/* Recent Activity */}
               <div className="bg-white rounded-xl shadow-sm">
-                <div className="p-6 border-b border-gray-200">
-                  <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
+                <div className="p-4 sm:p-6 border-b border-gray-200">
+                  <h2 className="text-base sm:text-lg font-semibold text-gray-900">Recent Activity</h2>
                 </div>
-                <div className="p-6">
+                <div className="p-3 sm:p-6">
                   {activityLog.slice(0, 5).map((activity) => (
-                    <div key={activity.id} className="flex items-start space-x-3 py-3 border-b border-gray-100 last:border-b-0">
-                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                        <FontAwesomeIcon icon={faClipboardList} className="text-primary text-sm" />
+                    <div key={activity.id} className="flex items-start space-x-2 sm:space-x-3 py-3 border-b border-gray-100 last:border-b-0">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <FontAwesomeIcon icon={faClipboardList} className="text-primary text-xs sm:text-sm" />
                       </div>
-                      <div className="flex-1">
-                        <p className="text-sm text-gray-900">{activity.message}</p>
-                        <p className="text-xs text-gray-700">{activity.timestamp.toLocaleString()}</p>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs sm:text-sm text-gray-900">{activity.message}</p>
+                        <p className="text-xs text-gray-700">{activity.timestamp.toLocaleString('en-GB', {
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}</p>
                       </div>
                     </div>
                   ))}
                   {activityLog.length === 0 && (
-                    <p className="text-gray-700 text-center py-8">No recent activity</p>
+                    <p className="text-gray-700 text-center py-8 text-sm">No recent activity</p>
                   )}
                 </div>
               </div>
@@ -536,10 +534,95 @@ export default function AdminDashboard() {
         {/* Bookings Tab */}
         {activeTab === 'bookings' && (
           <div className="bg-white rounded-xl shadow-sm">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">All Bookings</h2>
+            <div className="p-4 sm:p-6 border-b border-gray-200">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">All Bookings</h2>
             </div>
-            <div className="overflow-x-auto">
+            {/* Mobile Card Layout */}
+            <div className="lg:hidden p-3 space-y-3">
+              {bookings.map((booking) => (
+                <div key={booking.id} className="border border-gray-200 rounded-lg p-3">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <div className="w-7 h-7 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                          <FontAwesomeIcon icon={faUser} className="text-white text-xs" />
+                        </div>
+                        <p className="font-semibold text-gray-900 text-sm truncate">{getUserName(booking.userId)}</p>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          {booking.serviceType.replace('-', ' ')}
+                        </span>
+                        <span className={`inline-flex px-2.5 py-0.5 text-xs font-semibold rounded-full ${getStatusColor(booking.status)}`}>
+                          {booking.status}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-sm font-bold text-gray-900 ml-2">£{booking.price}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs mb-3">
+                    <div className="flex items-center text-gray-700">
+                      <FontAwesomeIcon icon={faCalendarAlt} className="mr-1.5 text-gray-400" />
+                      <span>{formatDate(booking.date)}</span>
+                    </div>
+                    <div className="flex items-center text-gray-700">
+                      <FontAwesomeIcon icon={faClock} className="mr-1.5 text-gray-400" />
+                      <span>{booking.startTime}</span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => setSelectedBooking(booking)}
+                      className="flex items-center justify-center space-x-1 px-3 py-2.5 bg-blue-50 text-primary rounded-lg hover:bg-blue-100 active:bg-blue-200 transition-colors cursor-pointer text-xs font-medium"
+                    >
+                      <FontAwesomeIcon icon={faEye} className="text-sm" />
+                      <span>View</span>
+                    </button>
+                    <button
+                      onClick={() => setSelectedChatBooking(booking)}
+                      className="relative flex items-center justify-center space-x-1 px-3 py-2.5 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 active:bg-purple-200 transition-colors cursor-pointer text-xs font-medium"
+                    >
+                      <FontAwesomeIcon icon={faComment} className="text-sm" />
+                      <span>Chat</span>
+                      {unreadCounts[booking.id] > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                          {unreadCounts[booking.id]}
+                        </span>
+                      )}
+                    </button>
+                    {booking.status === 'pending' && (
+                      <>
+                        <button
+                          onClick={() => updateBookingStatus(booking.id, 'confirmed')}
+                          className="flex items-center justify-center space-x-1 px-3 py-2.5 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 active:bg-green-200 transition-colors cursor-pointer text-xs font-medium"
+                        >
+                          <FontAwesomeIcon icon={faCheck} className="text-sm" />
+                          <span>Confirm</span>
+                        </button>
+                        <button
+                          onClick={() => updateBookingStatus(booking.id, 'rejected')}
+                          className="flex items-center justify-center space-x-1 px-3 py-2.5 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 active:bg-red-200 transition-colors cursor-pointer text-xs font-medium"
+                        >
+                          <FontAwesomeIcon icon={faTimes} className="text-sm" />
+                          <span>Reject</span>
+                        </button>
+                      </>
+                    )}
+                    {booking.status === 'confirmed' && (
+                      <button
+                        onClick={() => updateBookingStatus(booking.id, 'completed')}
+                        className="col-span-2 flex items-center justify-center space-x-1 px-3 py-2.5 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 active:bg-green-200 transition-colors cursor-pointer text-xs font-medium"
+                      >
+                        <FontAwesomeIcon icon={faCheckCircle} className="text-sm" />
+                        <span>Mark Complete</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Desktop Table */}
+            <div className="hidden lg:block overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
@@ -633,10 +716,51 @@ export default function AdminDashboard() {
         {/* Customers Tab */}
         {activeTab === 'customers' && (
           <div className="bg-white rounded-xl shadow-sm">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">Customers</h2>
+            <div className="p-4 sm:p-6 border-b border-gray-200">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Customers</h2>
             </div>
-            <div className="overflow-x-auto">
+            {/* Mobile Card Layout */}
+            <div className="lg:hidden p-3 space-y-3">
+              {users.map((user) => (
+                <div key={user.id} className="border border-gray-200 rounded-lg p-3">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <div className="w-7 h-7 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                          <FontAwesomeIcon icon={faUser} className="text-white text-xs" />
+                        </div>
+                        <p className="font-semibold text-gray-900 text-sm truncate">{user.firstName} {user.lastName}</p>
+                      </div>
+                      <div className="space-y-1 text-xs text-gray-600">
+                        <p className="truncate">{user.email}</p>
+                        <p>{user.phone}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between mb-3 text-xs">
+                    <div className="flex items-center space-x-4">
+                      <span className="text-gray-700">
+                        <FontAwesomeIcon icon={faPaw} className="mr-1.5 text-gray-400" />
+                        {user.pets?.length || 0} pets
+                      </span>
+                      <span className="text-gray-700">
+                        <FontAwesomeIcon icon={faCalendarAlt} className="mr-1.5 text-gray-400" />
+                        {bookings.filter(b => b.userId === user.id).length} bookings
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setSelectedCustomer(user)}
+                    className="w-full flex items-center justify-center space-x-1.5 px-3 py-2.5 bg-blue-50 text-primary rounded-lg hover:bg-blue-100 active:bg-blue-200 transition-colors cursor-pointer text-xs font-medium"
+                  >
+                    <FontAwesomeIcon icon={faEye} className="text-sm" />
+                    <span>View Details</span>
+                  </button>
+                </div>
+              ))}
+            </div>
+            {/* Desktop Table */}
+            <div className="hidden lg:block overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
@@ -688,23 +812,28 @@ export default function AdminDashboard() {
         {/* Activity Log Tab */}
         {activeTab === 'activity' && (
           <div className="bg-white rounded-xl shadow-sm">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">Activity Log</h2>
+            <div className="p-4 sm:p-6 border-b border-gray-200">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Activity Log</h2>
             </div>
-            <div className="p-6">
+            <div className="p-3 sm:p-6">
               {activityLog.map((activity) => (
-                <div key={activity.id} className="flex items-start space-x-3 py-4 border-b border-gray-100 last:border-b-0">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <FontAwesomeIcon icon={faClipboardList} className="text-primary text-sm" />
+                <div key={activity.id} className="flex items-start space-x-2 sm:space-x-3 py-3 sm:py-4 border-b border-gray-100 last:border-b-0">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <FontAwesomeIcon icon={faClipboardList} className="text-primary text-xs sm:text-sm" />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-900">{activity.message}</p>
-                    <p className="text-xs text-gray-700">{activity.timestamp.toLocaleString()}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs sm:text-sm text-gray-900">{activity.message}</p>
+                    <p className="text-xs text-gray-700">{activity.timestamp.toLocaleString('en-GB', {
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}</p>
                   </div>
                 </div>
               ))}
               {activityLog.length === 0 && (
-                <p className="text-gray-700 text-center py-8">No activity recorded</p>
+                <p className="text-gray-700 text-center py-8 text-sm">No activity recorded</p>
               )}
             </div>
           </div>
@@ -713,55 +842,60 @@ export default function AdminDashboard() {
         {/* Calendar Tab */}
         {activeTab === 'calendar' && (
           <div className="bg-white rounded-xl shadow-sm">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">Booking Calendar</h2>
+            <div className="p-4 sm:p-6 border-b border-gray-200">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Booking Calendar</h2>
             </div>
-            <div className="p-6">
+            <div className="p-3 sm:p-6">
               {/* Upcoming Bookings */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Upcoming Bookings</h3>
-                <div className="space-y-4">
+              <div className="mb-6 sm:mb-8">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Upcoming Bookings</h3>
+                <div className="space-y-3 sm:space-y-4">
                   {bookings
                     .filter(booking => booking.date >= new Date() && booking.status === 'confirmed')
                     .sort((a, b) => a.date.getTime() - b.date.getTime())
                     .map((booking) => (
-                      <div key={booking.id} className="border border-gray-200 rounded-lg p-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-4">
-                              <div className="text-sm font-medium text-gray-900">
-                                {formatDate(booking.date)}
-                              </div>
-                              <div className="text-sm text-gray-600">
-                                {booking.startTime} - {booking.endTime}
-                              </div>
-                              <div className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
-                                {booking.serviceType.replace('-', ' ')}
-                              </div>
+                      <div key={booking.id} className="border border-gray-200 rounded-lg p-3 sm:p-4">
+                        <div className="space-y-3">
+                          {/* Date and Service Info */}
+                          <div className="flex flex-wrap items-center gap-2">
+                            <div className="text-xs sm:text-sm font-medium text-gray-900">
+                              {formatDate(booking.date)}
                             </div>
-                            <div className="mt-2 text-sm text-gray-600">
-                              Customer: {getUserName(booking.userId)} | Price: £{booking.price}
+                            <div className="text-xs sm:text-sm text-gray-600">
+                              {booking.startTime} - {booking.endTime}
                             </div>
-                            {booking.specialInstructions && (
-                              <div className="mt-2 text-sm text-gray-500">
-                                Instructions: {booking.specialInstructions}
-                              </div>
-                            )}
+                            <div className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
+                              {booking.serviceType.replace('-', ' ')}
+                            </div>
                           </div>
-                          <div className="flex flex-wrap gap-2">
+
+                          {/* Customer Info */}
+                          <div className="text-xs sm:text-sm text-gray-600">
+                            <span className="font-medium">{getUserName(booking.userId)}</span> • £{booking.price}
+                          </div>
+
+                          {/* Special Instructions */}
+                          {booking.specialInstructions && (
+                            <div className="text-xs sm:text-sm text-gray-500 bg-gray-50 p-2 rounded">
+                              <span className="font-medium">Note:</span> {booking.specialInstructions}
+                            </div>
+                          )}
+
+                          {/* Action Buttons */}
+                          <div className="grid grid-cols-3 gap-2 pt-2">
                             <button
                               onClick={() => setSelectedBooking(booking)}
-                              className="flex items-center space-x-1 px-3 py-1.5 bg-blue-50 text-primary rounded-md hover:bg-blue-100 transition-colors cursor-pointer text-sm"
+                              className="flex items-center justify-center space-x-1 px-2 sm:px-3 py-2 sm:py-1.5 bg-blue-50 text-primary rounded-lg hover:bg-blue-100 active:bg-blue-200 transition-colors cursor-pointer text-xs sm:text-sm"
                             >
-                              <FontAwesomeIcon icon={faEye} className="text-sm" />
-                              <span>View</span>
+                              <FontAwesomeIcon icon={faEye} className="text-xs sm:text-sm" />
+                              <span className="hidden sm:inline">View</span>
                             </button>
                             <button
                               onClick={() => setSelectedChatBooking(booking)}
-                              className="relative flex items-center space-x-1 px-3 py-1.5 bg-purple-50 text-purple-700 rounded-md hover:bg-purple-100 transition-colors cursor-pointer text-sm"
+                              className="relative flex items-center justify-center space-x-1 px-2 sm:px-3 py-2 sm:py-1.5 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 active:bg-purple-200 transition-colors cursor-pointer text-xs sm:text-sm"
                             >
-                              <FontAwesomeIcon icon={faComment} className="text-sm" />
-                              <span>Chat</span>
+                              <FontAwesomeIcon icon={faComment} className="text-xs sm:text-sm" />
+                              <span className="hidden sm:inline">Chat</span>
                               {unreadCounts[booking.id] > 0 && (
                                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold">
                                   {unreadCounts[booking.id]}
@@ -770,63 +904,66 @@ export default function AdminDashboard() {
                             </button>
                             <button
                               onClick={() => updateBookingStatus(booking.id, 'completed')}
-                              className="flex items-center space-x-1 px-3 py-1.5 bg-green-50 text-green-700 rounded-md hover:bg-green-100 transition-colors cursor-pointer text-sm"
+                              className="flex items-center justify-center space-x-1 px-2 sm:px-3 py-2 sm:py-1.5 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 active:bg-green-200 transition-colors cursor-pointer text-xs sm:text-sm"
                             >
-                              <FontAwesomeIcon icon={faCheckCircle} className="text-sm" />
-                              <span>Complete</span>
+                              <FontAwesomeIcon icon={faCheckCircle} className="text-xs sm:text-sm" />
+                              <span className="hidden sm:inline">Complete</span>
                             </button>
                           </div>
                         </div>
                       </div>
                     ))}
                   {bookings.filter(booking => booking.date >= new Date() && booking.status === 'confirmed').length === 0 && (
-                    <p className="text-gray-700 text-center py-8">No upcoming bookings</p>
+                    <p className="text-gray-700 text-center py-8 text-sm">No upcoming bookings</p>
                   )}
                 </div>
               </div>
 
               {/* Past Bookings */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Past Bookings</h3>
-                <div className="space-y-4">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Past Bookings</h3>
+                <div className="space-y-3 sm:space-y-4">
                   {bookings
                     .filter(booking => booking.date < new Date() || booking.status === 'completed')
                     .sort((a, b) => b.date.getTime() - a.date.getTime())
                     .slice(0, 10)
                     .map((booking) => (
-                      <div key={booking.id} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-4">
-                              <div className="text-sm font-medium text-gray-900">
-                                {formatDate(booking.date)}
-                              </div>
-                              <div className="text-sm text-gray-600">
-                                {booking.startTime} - {booking.endTime}
-                              </div>
-                              <div className={`px-2 py-1 rounded text-xs font-medium ${
-                                booking.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                              }`}>
-                                {booking.status}
-                              </div>
+                      <div key={booking.id} className="border border-gray-200 rounded-lg p-3 sm:p-4 bg-gray-50">
+                        <div className="space-y-3">
+                          {/* Date and Status */}
+                          <div className="flex flex-wrap items-center gap-2">
+                            <div className="text-xs sm:text-sm font-medium text-gray-900">
+                              {formatDate(booking.date)}
                             </div>
-                            <div className="mt-2 text-sm text-gray-600">
-                              Customer: {getUserName(booking.userId)} | {booking.serviceType.replace('-', ' ')} | £{booking.price}
+                            <div className="text-xs sm:text-sm text-gray-600">
+                              {booking.startTime} - {booking.endTime}
+                            </div>
+                            <div className={`px-2 py-1 rounded text-xs font-medium ${
+                              booking.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                            }`}>
+                              {booking.status}
                             </div>
                           </div>
-                          <div className="flex flex-wrap gap-2">
+
+                          {/* Customer and Service Info */}
+                          <div className="text-xs sm:text-sm text-gray-600">
+                            <span className="font-medium">{getUserName(booking.userId)}</span> • {booking.serviceType.replace('-', ' ')} • £{booking.price}
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="grid grid-cols-2 gap-2 pt-2">
                             <button
                               onClick={() => setSelectedBooking(booking)}
-                              className="flex items-center space-x-1 px-3 py-1.5 bg-blue-50 text-primary rounded-md hover:bg-blue-100 transition-colors cursor-pointer text-sm"
+                              className="flex items-center justify-center space-x-1 px-2 sm:px-3 py-2 sm:py-1.5 bg-blue-50 text-primary rounded-lg hover:bg-blue-100 active:bg-blue-200 transition-colors cursor-pointer text-xs sm:text-sm"
                             >
-                              <FontAwesomeIcon icon={faEye} className="text-sm" />
+                              <FontAwesomeIcon icon={faEye} className="text-xs sm:text-sm" />
                               <span>View</span>
                             </button>
                             <button
                               onClick={() => setSelectedChatBooking(booking)}
-                              className="relative flex items-center space-x-1 px-3 py-1.5 bg-purple-50 text-purple-700 rounded-md hover:bg-purple-100 transition-colors cursor-pointer text-sm"
+                              className="relative flex items-center justify-center space-x-1 px-2 sm:px-3 py-2 sm:py-1.5 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 active:bg-purple-200 transition-colors cursor-pointer text-xs sm:text-sm"
                             >
-                              <FontAwesomeIcon icon={faComment} className="text-sm" />
+                              <FontAwesomeIcon icon={faComment} className="text-xs sm:text-sm" />
                               <span>Chat</span>
                               {unreadCounts[booking.id] > 0 && (
                                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold">
@@ -839,7 +976,7 @@ export default function AdminDashboard() {
                       </div>
                     ))}
                   {bookings.filter(booking => booking.date < new Date() || booking.status === 'completed').length === 0 && (
-                    <p className="text-gray-700 text-center py-8">No past bookings</p>
+                    <p className="text-gray-700 text-center py-8 text-sm">No past bookings</p>
                   )}
                 </div>
               </div>
@@ -850,58 +987,58 @@ export default function AdminDashboard() {
 
       {/* Customer Details Modal */}
       {selectedCustomer && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
+          <div className="bg-white rounded-xl sm:rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white p-4 sm:p-6 border-b border-gray-200 rounded-t-xl sm:rounded-t-2xl">
               <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-lg sm:text-2xl font-bold text-gray-900 truncate pr-2">
                   {selectedCustomer.firstName} {selectedCustomer.lastName}
                 </h2>
                 <button
                   onClick={() => setSelectedCustomer(null)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 flex-shrink-0 w-8 h-8 flex items-center justify-center"
                 >
-                  <FontAwesomeIcon icon={faTimes} className="text-xl" />
+                  <FontAwesomeIcon icon={faTimes} className="text-lg sm:text-xl" />
                 </button>
               </div>
             </div>
 
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               {/* Contact Information */}
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="mb-4 sm:mb-6">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Contact Information</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Email</label>
-                    <p className="text-gray-900">{selectedCustomer.email}</p>
+                    <label className="text-xs sm:text-sm font-medium text-gray-700">Email</label>
+                    <p className="text-sm sm:text-base text-gray-900 break-words">{selectedCustomer.email}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Phone</label>
-                    <p className="text-gray-900">{selectedCustomer.phone}</p>
+                    <label className="text-xs sm:text-sm font-medium text-gray-700">Phone</label>
+                    <p className="text-sm sm:text-base text-gray-900">{selectedCustomer.phone}</p>
                   </div>
-                  <div className="md:col-span-2">
-                    <label className="text-sm font-medium text-gray-700">Address</label>
-                    <p className="text-gray-900">{selectedCustomer.address}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Postcode</label>
-                    <p className="text-gray-900">{selectedCustomer.postcode}</p>
+                  <div className="sm:col-span-2">
+                    <label className="text-xs sm:text-sm font-medium text-gray-700">Address</label>
+                    <p className="text-sm sm:text-base text-gray-900">{selectedCustomer.address}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Customer Since</label>
-                    <p className="text-gray-900">{selectedCustomer.createdAt.toLocaleDateString('en-GB')}</p>
+                    <label className="text-xs sm:text-sm font-medium text-gray-700">Postcode</label>
+                    <p className="text-sm sm:text-base text-gray-900">{selectedCustomer.postcode}</p>
+                  </div>
+                  <div>
+                    <label className="text-xs sm:text-sm font-medium text-gray-700">Customer Since</label>
+                    <p className="text-sm sm:text-base text-gray-900">{selectedCustomer.createdAt.toLocaleDateString('en-GB')}</p>
                   </div>
                 </div>
               </div>
 
               {/* Pet Information */}
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Pet Information</h3>
-                <div className="space-y-4">
-                  {selectedCustomer.pets?.map((pet, index) => (
-                    <div key={pet.id} className="border border-gray-200 rounded-lg p-4">
-                      <h4 className="font-semibold text-gray-900 mb-2">{pet.name}</h4>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+              <div className="mb-4 sm:mb-6">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Pet Information</h3>
+                <div className="space-y-3 sm:space-y-4">
+                  {selectedCustomer.pets?.map((pet) => (
+                    <div key={pet.id} className="border border-gray-200 rounded-lg p-3 sm:p-4">
+                      <h4 className="text-sm sm:text-base font-semibold text-gray-900 mb-2">{pet.name}</h4>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 text-xs sm:text-sm">
                         <div>
                           <span className="font-medium text-gray-700">Breed:</span>
                           <p className="text-gray-900">{pet.breed}</p>
@@ -930,8 +1067,8 @@ export default function AdminDashboard() {
 
               {/* Booking History */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Booking History</h3>
-                <div className="space-y-3">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Booking History</h3>
+                <div className="space-y-2 sm:space-y-3">
                   {bookings
                     .filter(booking => booking.userId === selectedCustomer.id)
                     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
@@ -976,74 +1113,74 @@ export default function AdminDashboard() {
 
       {/* Booking Details Modal */}
       {selectedBooking && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
+          <div className="bg-white rounded-xl sm:rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white p-4 sm:p-6 border-b border-gray-200 rounded-t-xl sm:rounded-t-2xl">
               <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold text-gray-900">Booking Details</h2>
-                <button 
+                <h2 className="text-base sm:text-xl font-bold text-gray-900">Booking Details</h2>
+                <button
                   onClick={() => setSelectedBooking(null)}
-                  className="text-gray-600 hover:text-gray-800"
+                  className="text-gray-600 hover:text-gray-800 flex-shrink-0 w-8 h-8 flex items-center justify-center"
                 >
-                  <FontAwesomeIcon icon={faTimes} className="text-xl" />
+                  <FontAwesomeIcon icon={faTimes} className="text-lg sm:text-xl" />
                 </button>
               </div>
             </div>
-            
-            <div className="p-6 space-y-6">
-              <div className="grid grid-cols-2 gap-6">
+
+            <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Customer</h3>
-                  <p className="text-gray-700">{getUserName(selectedBooking.userId)}</p>
+                  <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 sm:mb-2">Customer</h3>
+                  <p className="text-sm sm:text-base text-gray-700">{getUserName(selectedBooking.userId)}</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Service</h3>
-                  <p className="text-gray-700 capitalize">{selectedBooking.serviceType.replace('-', ' ')}</p>
+                  <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 sm:mb-2">Service</h3>
+                  <p className="text-sm sm:text-base text-gray-700 capitalize">{selectedBooking.serviceType.replace('-', ' ')}</p>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Date & Time</h3>
-                  <p className="text-gray-700">
+                <div className="sm:col-span-2">
+                  <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 sm:mb-2">Date & Time</h3>
+                  <p className="text-sm sm:text-base text-gray-700">
                     {formatDate(selectedBooking.date)} at {selectedBooking.startTime} - {selectedBooking.endTime}
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Status</h3>
+                  <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 sm:mb-2">Status</h3>
                   <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(selectedBooking.status)}`}>
                     {selectedBooking.status}
                   </span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Price</h3>
-                  <p className="text-gray-700">£{selectedBooking.price}</p>
+                  <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 sm:mb-2">Price</h3>
+                  <p className="text-sm sm:text-base text-gray-700">£{selectedBooking.price}</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Payment</h3>
-                  <p className="text-gray-700 capitalize">{selectedBooking.paymentMethod}</p>
+                  <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 sm:mb-2">Payment</h3>
+                  <p className="text-sm sm:text-base text-gray-700 capitalize">{selectedBooking.paymentMethod}</p>
                 </div>
               </div>
 
               {selectedBooking.specialInstructions && (
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Special Instructions</h3>
-                  <p className="text-gray-700 bg-gray-50 p-3 rounded-lg">{selectedBooking.specialInstructions}</p>
+                  <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 sm:mb-2">Special Instructions</h3>
+                  <p className="text-xs sm:text-sm text-gray-700 bg-gray-50 p-2 sm:p-3 rounded-lg">{selectedBooking.specialInstructions}</p>
                 </div>
               )}
 
               {selectedBooking.adminNotes && (
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Admin Notes</h3>
-                  <p className="text-gray-700 bg-gray-50 p-3 rounded-lg">{selectedBooking.adminNotes}</p>
+                  <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 sm:mb-2">Admin Notes</h3>
+                  <p className="text-xs sm:text-sm text-gray-700 bg-gray-50 p-2 sm:p-3 rounded-lg">{selectedBooking.adminNotes}</p>
                 </div>
               )}
 
               {/* Chat Button */}
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-3 sm:pt-4 border-t border-gray-200">
                 <button
                   onClick={() => {
                     setSelectedChatBooking(selectedBooking);
                     setSelectedBooking(null);
                   }}
-                  className="w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+                  className="w-full bg-purple-600 text-white px-4 py-3 sm:py-2 rounded-lg hover:bg-purple-700 active:bg-purple-800 transition-colors flex items-center justify-center space-x-2 text-sm sm:text-base"
                 >
                   <FontAwesomeIcon icon={faComment} />
                   <span>Chat with Customer</span>
@@ -1056,11 +1193,11 @@ export default function AdminDashboard() {
               </div>
 
               {selectedBooking.status === 'pending' && (
-                <div className="flex space-x-4 pt-4 border-t border-gray-200">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-gray-200">
                   <button
                     onClick={() => updateBookingStatus(selectedBooking.id, 'confirmed')}
                     disabled={isLoading}
-                    className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                    className="bg-green-600 text-white px-4 py-3 sm:py-2 rounded-lg hover:bg-green-700 active:bg-green-800 transition-colors disabled:opacity-50 text-sm sm:text-base"
                   >
                     {isLoading ? <FontAwesomeIcon icon={faSpinner} className="animate-spin mr-2" /> : null}
                     Confirm Booking
@@ -1068,7 +1205,7 @@ export default function AdminDashboard() {
                   <button
                     onClick={() => updateBookingStatus(selectedBooking.id, 'rejected')}
                     disabled={isLoading}
-                    className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
+                    className="bg-red-600 text-white px-4 py-3 sm:py-2 rounded-lg hover:bg-red-700 active:bg-red-800 transition-colors disabled:opacity-50 text-sm sm:text-base"
                   >
                     Reject Booking
                   </button>
@@ -1076,11 +1213,11 @@ export default function AdminDashboard() {
               )}
 
               {selectedBooking.status === 'confirmed' && (
-                <div className="pt-4 border-t border-gray-200">
+                <div className="pt-3 sm:pt-4 border-t border-gray-200">
                   <button
                     onClick={() => updateBookingStatus(selectedBooking.id, 'completed')}
                     disabled={isLoading}
-                    className="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
+                    className="w-full bg-primary text-white px-4 py-3 sm:py-2 rounded-lg hover:bg-primary-dark active:bg-primary transition-colors disabled:opacity-50 text-sm sm:text-base"
                   >
                     {isLoading ? <FontAwesomeIcon icon={faSpinner} className="animate-spin mr-2" /> : null}
                     Mark as Completed
