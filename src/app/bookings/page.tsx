@@ -468,8 +468,8 @@ export default function BookingsPage() {
       </div>
 
       {/* Progress Steps */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-center mb-8">
+      <div className="max-w-3xl mx-auto px-0 py-8">
+        <div className="flex items-center justify-center mb-8 mx-6">
           {[1, 2, 3, 4].map((stepNumber) => (
             <div key={stepNumber} className="flex items-center">
               <div

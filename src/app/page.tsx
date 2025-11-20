@@ -27,6 +27,8 @@ export default function Home() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [isGalleryExpanded, setIsGalleryExpanded] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -94,10 +96,10 @@ export default function Home() {
                 About
               </button>
               <button
-                onClick={() => scrollToSection("areas")}
+                onClick={() => scrollToSection("gallery")}
                 className="text-gray-600 cursor-pointer hover:text-primary transition-colors"
               >
-                Areas
+                Gallery
               </button>
               <button
                 onClick={() => scrollToSection("testimonials")}
@@ -164,10 +166,10 @@ export default function Home() {
                 About
               </button>
               <button
-                onClick={() => scrollToSection("areas")}
+                onClick={() => scrollToSection("gallery")}
                 className="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors"
               >
-                Areas
+                Gallery
               </button>
               <button
                 onClick={() => scrollToSection("testimonials")}
@@ -509,6 +511,103 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Gallery Section */}
+      <section id="gallery" className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Happy Moments with Our Furry Friends
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              See the joy and adventures we share with the pets we care for.
+              Every walk, every play session, every moment matters.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+            {Array.from({ length: isGalleryExpanded ? 21 : 8 }, (_, i) => i + 1).map((num) => (
+              <div
+                key={num}
+                className="relative aspect-square overflow-hidden rounded-lg cursor-pointer group shadow-md hover:shadow-xl transition-all duration-300"
+                onClick={() => setSelectedImage(num)}
+              >
+                <Image
+                  src={`/dog${num}.jpeg`}
+                  alt={`Happy pet care moment ${num}`}
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform duration-300"
+                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                />
+                <div className="absolute inset-0  bg-opacity-0 group-hover:bg-opacity-20 transition-opacity duration-300" />
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-8">
+            <button
+              onClick={() => setIsGalleryExpanded(!isGalleryExpanded)}
+              className="bg-white text-primary border-2 border-primary px-8 py-3 rounded-lg text-lg font-semibold hover:bg-primary hover:text-white transition-colors shadow-md cursor-pointer"
+            >
+              {isGalleryExpanded ? "Show Less" : `View All ${21} Photos`}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Image Lightbox Modal */}
+      {selectedImage !== null && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button
+            onClick={() => setSelectedImage(null)}
+            className="absolute top-4 right-4 text-white hover:text-gray-300 z-10 cursor-pointer"
+          >
+            <FontAwesomeIcon icon={faTimes} className="text-3xl" />
+          </button>
+
+          {selectedImage > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedImage(selectedImage - 1);
+              }}
+              className="absolute left-4 text-white hover:text-gray-300 z-10 cursor-pointer"
+            >
+              <div className="text-4xl">‹</div>
+            </button>
+          )}
+
+          {selectedImage < 21 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedImage(selectedImage + 1);
+              }}
+              className="absolute right-4 text-white hover:text-gray-300 z-10 cursor-pointer"
+            >
+              <div className="text-4xl">›</div>
+            </button>
+          )}
+
+          <div className="relative max-w-5xl max-h-[90vh] w-full h-full flex items-center justify-center">
+            <Image
+              src={`/dog${selectedImage}.jpeg`}
+              alt={`Happy pet care moment ${selectedImage}`}
+              fill
+              className="object-contain"
+              onClick={(e) => e.stopPropagation()}
+              sizes="90vw"
+            />
+          </div>
+
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-sm bg-black bg-opacity-50 px-4 py-2 rounded-full">
+            {selectedImage} / 21
+          </div>
+        </div>
+      )}
 
       {/* Service Areas */}
       <section id="areas" className="py-20 bg-gray-50">
