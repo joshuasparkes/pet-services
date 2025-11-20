@@ -207,51 +207,66 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-16 pb-20 bg-gradient-to-br from-blue-50 to-indigo-100">
+      <section className="pt-16 pb-12 lg:pb-20 bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center py-20">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Professional Pet Care in
-              <span className="text-primary"> Bournville</span>
-            </h1>
-            <h2 className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Trusted, caring pet services for your beloved companions. Dog
-              walking, pet sitting, and home visits with the personal touch your
-              pets deserve.
-            </h2>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <a
-                href="/bookings"
-                className="bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-dark transition-colors shadow-lg"
-              >
-                Book Pet Care Now
-              </a>
-              <button
-                onClick={() => setIsContactModalOpen(true)}
-                className="border-2 cursor-pointer border-primary text-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary hover:text-white transition-colors"
-              >
-                Ask a Question
-              </button>
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center py-8 lg:py-20">
+            {/* Text Content */}
+            <div className="text-center lg:text-left order-2 lg:order-1">
+              <h1 className="text-3xl md:text-6xl font-bold text-gray-900 mb-4 lg:mb-6">
+                Professional Pet Care in
+                <span className="text-primary"> Bournville</span>
+              </h1>
+              <h2 className="text-lg md:text-2xl text-gray-600 mb-6 lg:mb-8">
+                Trusted, caring pet services for your beloved companions. Dog
+                walking, pet sitting, and home visits with the personal touch your
+                pets deserve.
+              </h2>
+              <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 justify-center lg:justify-start items-center">
+                <a
+                  href="/bookings"
+                  className="w-full sm:w-auto bg-primary text-white px-6 lg:px-8 py-3 lg:py-4 rounded-lg text-base lg:text-lg font-semibold hover:bg-primary-dark transition-colors shadow-lg"
+                >
+                  Book Pet Care Now
+                </a>
+                <button
+                  onClick={() => setIsContactModalOpen(true)}
+                  className="w-full sm:w-auto border-2 cursor-pointer border-primary text-primary px-6 lg:px-8 py-3 lg:py-4 rounded-lg text-base lg:text-lg font-semibold hover:bg-primary hover:text-white transition-colors"
+                >
+                  Ask a Question
+                </button>
+              </div>
+              <div className="mt-6 lg:mt-8 flex flex-wrap justify-center lg:justify-start items-center gap-3 lg:gap-6 text-xs lg:text-sm text-gray-600">
+                <div className="flex items-center space-x-2">
+                  <FontAwesomeIcon
+                    icon={faShieldAlt}
+                    className="text-secondary"
+                  />
+                  <span>Fully Insured</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-secondary"
+                  />
+                  <span>DBS Checked</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faHeart} className="text-red-500" />
+                  <span>Local & Trusted</span>
+                </div>
+              </div>
             </div>
-            <div className="mt-8 flex justify-center items-center space-x-6 text-sm text-gray-600">
-              <div className="flex items-center space-x-2">
-                <FontAwesomeIcon
-                  icon={faShieldAlt}
-                  className="text-secondary"
-                />
-                <span>Fully Insured</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <FontAwesomeIcon
-                  icon={faCheckCircle}
-                  className="text-secondary"
-                />
-                <span>DBS Checked</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <FontAwesomeIcon icon={faHeart} className="text-red-500" />
-                <span>Local & Trusted</span>
-              </div>
+
+            {/* Hero Image */}
+            <div className="relative w-full h-[220px] sm:h-[280px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl order-1 lg:order-2">
+              <Image
+                src="/smiling-dog.jpg"
+                alt="Happy dog enjoying professional pet care in Bournville"
+                fill
+                className="object-cover"
+                priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
             </div>
           </div>
         </div>
