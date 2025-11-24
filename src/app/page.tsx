@@ -67,7 +67,7 @@ export default function Home() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Image
-                src="/doglogo.jpg"
+                src="/doglogo.png"
                 alt="Bournville Pet Care Logo"
                 width={48}
                 height={48}
@@ -822,7 +822,7 @@ export default function Home() {
             <div>
               <div className="flex items-center space-x-3 mb-4">
                 <Image
-                  src="/doglogo.jpg"
+                  src="/doglogo.png"
                   alt="Bournville Pet Care Logo"
                   width={32}
                   height={32}
