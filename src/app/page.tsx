@@ -21,6 +21,7 @@ import {
   faUsers,
   faTimes,
   faBars,
+  faChevronCircleRight,
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
@@ -222,18 +223,19 @@ export default function Home() {
                 pets deserve.
               </h2>
               <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 justify-center lg:justify-start items-center">
-                <a
-                  href="/bookings"
-                  className="w-full sm:w-auto bg-primary text-white px-6 lg:px-8 py-3 lg:py-4 rounded-lg text-base lg:text-lg font-semibold hover:bg-primary-dark transition-colors shadow-lg"
-                >
-                  Book Pet Care Now
-                </a>
                 <button
                   onClick={() => setIsContactModalOpen(true)}
-                  className="w-full sm:w-auto border-2 cursor-pointer border-primary text-primary px-6 lg:px-8 py-3 lg:py-4 rounded-lg text-base lg:text-lg font-semibold hover:bg-primary hover:text-white transition-colors"
+                                  className="w-full sm:w-auto bg-primary text-white px-6 lg:px-8 py-3 lg:py-4 rounded-lg text-base lg:text-lg font-semibold hover:bg-primary-dark transition-colors shadow-lg"
+
                 >
-                  Ask a Question
+                  Request Booking <FontAwesomeIcon icon={faChevronCircleRight}/>
                 </button>
+                <a
+                  href="/bookings"
+                  className="w-full flex-row flex justify-center items-center gap-1 sm:w-auto border-2 cursor-pointer border-primary text-primary px-6 lg:px-8 py-3 lg:py-4 rounded-lg text-base lg:text-lg font-semibold hover:bg-primary hover:text-white transition-colors"
+                >
+                  Or Book Online
+                </a>
               </div>
               <div className="mt-6 lg:mt-8 flex flex-wrap justify-center lg:justify-start items-center gap-3 lg:gap-6 text-xs lg:text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
